@@ -1,4 +1,4 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.presentation
 
 import android.app.Activity
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.boltic28.cbook.R
+import com.boltic28.cbook.data.Contact
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -32,13 +34,17 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         recycler_main.layoutManager =
             LinearLayoutManager(view?.context, LinearLayoutManager.VERTICAL, false)
 
-        recycler_main.adapter = ContactItemAdapter(mainActivity.model.getSelectedPosition(), list, object :
-        ContactItemAdapter.OnItemClickListener {
-            override fun onClick(contact: Contact) {
-                mainActivity.model.setContact(contact)
-                mainActivity.openContactFragment()
-            }
-        })
+        recycler_main.adapter =
+            ContactItemAdapter(
+                mainActivity.model.getSelectedPosition(),
+                list,
+                object :
+                    ContactItemAdapter.OnItemClickListener {
+                    override fun onClick(contact: Contact) {
+                        mainActivity.model.setContact(contact)
+                        mainActivity.openContactFragment()
+                    }
+                })
     }
 
     private fun initFragmentManager() {

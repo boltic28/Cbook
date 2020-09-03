@@ -1,10 +1,12 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.presentation
 
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.boltic28.cbook.R
+import com.boltic28.cbook.data.Contact
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_contact.*
 

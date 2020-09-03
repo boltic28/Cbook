@@ -1,4 +1,4 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.util
 
 import android.graphics.*
 import com.squareup.picasso.Transformation

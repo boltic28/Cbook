@@ -1,4 +1,4 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.data
 
 import java.io.Serializable
 

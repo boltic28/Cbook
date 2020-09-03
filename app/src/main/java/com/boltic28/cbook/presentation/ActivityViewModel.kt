@@ -1,8 +1,9 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.boltic28.cbook.data.Contact
 
 class ActivityViewModel: ViewModel() {
 

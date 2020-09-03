@@ -1,4 +1,4 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.presentation
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.boltic28.cbook.R
+import com.boltic28.cbook.data.Contact
 
 class ContactItemAdapter (private val selectedPosition: Int,
-    private val contacts: List<Contact>, private val listener: OnItemClickListener
+                          private val contacts: List<Contact>, private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ContactItemAdapter.ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

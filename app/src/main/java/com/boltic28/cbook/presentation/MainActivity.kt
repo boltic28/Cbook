@@ -1,10 +1,12 @@
-package com.boltic28.cbook
+package com.boltic28.cbook.presentation
 
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProviders
+import com.boltic28.cbook.R
+import com.boltic28.cbook.data.Contact
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +39,11 @@ class MainActivity : AppCompatActivity() {
     private fun openTwoFragments() {
         setMainToolbar()
         fragmentManager.beginTransaction()
-            .replace(R.id.container, MainFragment.getInstance(), MainFragment.FRAG_TAG)
+            .replace(
+                R.id.container,
+                MainFragment.getInstance(),
+                MainFragment.FRAG_TAG
+            )
             .replace(
                 R.id.extraContainer,
                 ContactFragment.getInstance(),
@@ -62,7 +68,11 @@ class MainActivity : AppCompatActivity() {
     private fun openMainFragment() {
         setMainToolbar()
         fragmentManager.beginTransaction()
-            .replace(R.id.container, MainFragment.getInstance(), MainFragment.FRAG_TAG)
+            .replace(
+                R.id.container,
+                MainFragment.getInstance(),
+                MainFragment.FRAG_TAG
+            )
             .commit()
     }
 
@@ -85,6 +95,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
+            setMainToolbar()
             return true
         }
         return super.onOptionsItemSelected(item)
