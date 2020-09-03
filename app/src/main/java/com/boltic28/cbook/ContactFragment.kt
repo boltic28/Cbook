@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_contact.*
 
-
 class ContactFragment: Fragment(R.layout.fragment_contact) {
 
     companion object {
