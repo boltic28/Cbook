@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ContactBook</string>
+
+    <string name="header_main_template">Contacts</string>
+
+    <string name="name">ContactName</string>
+    <string name="number">+375441234567</string>
+    <string name="mail">Contact@mail.com</string>
+    <string name="remark">ContactRemark</string>
+    <string name="no_photo">noPhoto</string>
+    <string name="contact_detail_info">detail info</string>
+    <string name="contact_s_image">contact\'s image</string>
+    <string name="full_name">full name</string>
+    <string name="_375_29_1234567">+375 29 1234567</string>
+    <string name="contact_mail_com">contact@mail.com</string>
+    <string name="remarks_for_contact">remarks for contact</string>
+</resources>
