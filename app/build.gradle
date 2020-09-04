@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
@@ -25,6 +26,9 @@ android {
 }
 
 dependencies {
+    //Dagger2
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    implementation "com.google.dagger:dagger:$dagger2_version"
     implementation "com.squareup.picasso:picasso:$picasso_version"
     implementation 'com.mikhaellopez:circularimageview:4.2.0'
     implementation "android.arch.lifecycle:extensions:1.1.1"

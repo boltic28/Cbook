@@ -1,20 +1,20 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.boltic28.cbook.data.Contact
+import com.boltic28.cbook.presentation.MainFragmentModel
 
-class ActivityViewModel: ViewModel() {
+class DataBase {
 
-    private val contacts = mutableListOf(
+    private var dbContacts = listOf(
         Contact(
             1L,
             "Bill Roberts",
             "+375 29 2223343",
             "cont1@gmail.com",
             "smth about him",
-            "path to photo"
+            "https://randomuser.me/api/portraits/women/26.jpg"
         ),
         Contact(
             2L,
@@ -57,105 +57,119 @@ class ActivityViewModel: ViewModel() {
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            7L,
+            "Ron Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            8L,
+            "Serg Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            9L,
+            "Mark Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            10L,
+            "Linda Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            11L,
+            "Frank Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            12L,
+            "Regina Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            13L,
+            "Den Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            14L,
+            "Nick Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            15L,
+            "Grace Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         ),
         Contact(
-            6L,
-            "Bruno Roberts",
+            16L,
+            "Olya Roberts",
             "+375 29 5623343",
             "cont6@gmail.com",
             "smth about him",
             "path to photo"
         )
     )
-    private var tmpContact = contacts[0]
-    private var selectedPosition = 0
+    private var dbContact: Contact
+    private var selectedContactId: Long
 
-    fun getSelectedPosition() = selectedPosition
+    private val workingContacts = mutableListOf<Contact>()
 
-    fun getContact(): LiveData<Contact>{
-        val data = MutableLiveData<Contact>()
-        data.value = tmpContact
-        return data
+    init {
+        dbContact = dbContacts[0]
+        selectedContactId = dbContact.id
     }
 
-    fun setContact(contact: Contact){
-        tmpContact = contact
-        selectedPosition = contacts.indexOf(contact)
+    private val _mutableContact = MutableLiveData<Contact>()
+    val contact: LiveData<Contact>
+        get() = _mutableContact
+
+    private val _mutableContacts = MutableLiveData<List<Contact>>()
+    val contacts: LiveData<List<Contact>>
+        get() = _mutableContacts
+
+    fun getSelectedContactId() = selectedContactId
+
+    fun setContact(contact: Contact) {
+        dbContact = contact
+        selectedContactId = contact.id
     }
 
-    fun getContacts(): LiveData<List<Contact>>{
-        val data = MutableLiveData<List<Contact>>()
-        data.value = contacts
-        return data
+    fun getOne() = dbContact
+    fun getAll() = dbContacts
+
+    fun goWork(contact: Contact){
+        workingContacts.add(contact)
+    }
+
+    fun setFree(contact: Contact){
+        workingContacts.remove(contact)
     }
 }

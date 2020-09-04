@@ -2,17 +2,21 @@ package com.boltic28.cbook.presentation
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 import kotlinx.android.synthetic.main.fragment_main.*
+import javax.inject.Inject
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
 
     companion object {
+        const val TAG = "cBookt"
         const val FRAG_TAG = "main_Fragment"
 
         fun getInstance(): MainFragment {
@@ -20,34 +24,47 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-    private lateinit var mainActivity: MainActivity
+    lateinit var model: MainFragmentModel
+
+    lateinit var mainActivity: MainActivity
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG,"CREATE MainFragment")
         super.onViewCreated(view, savedInstanceState)
 
-        initFragmentManager()
-        mainActivity.model.getContacts().observe(this,
-            Observer<List<Contact>> { list -> setRecycler(list) })
+        getMainActivity()
+
+
+        model = ViewModelProviders.of(this).get(MainFragmentModel::class.java)
+        setAdapter(model.getTestAll())
+//        model.getAll().observe(this,
+//            Observer<List<Contact>> { setAdapter(it) })
+//        model.getContact().observe(this,
+//            Observer<Contact> { mainActivity.openContactFragment() })
+
     }
 
-    private fun setRecycler(list: List<Contact>) {
+    private fun setAdapter(list: List<Contact>) {
+        Log.d(MainActivity.TAG,"MainFragment refreshing the adapter")
+
         recycler_main.layoutManager =
             LinearLayoutManager(view?.context, LinearLayoutManager.VERTICAL, false)
 
         recycler_main.adapter =
             ContactItemAdapter(
-                mainActivity.model.getSelectedPosition(),
+                model.getSelectedId(),
                 list,
                 object :
                     ContactItemAdapter.OnItemClickListener {
                     override fun onClick(contact: Contact) {
-                        mainActivity.model.setContact(contact)
+                        model.setContact(contact)
                         mainActivity.openContactFragment()
                     }
                 })
     }
 
-    private fun initFragmentManager() {
+    private fun getMainActivity() {
+        Log.d(MainActivity.TAG,"MainFragment open Contact")
         val mainActivity: Activity? = activity
         if (mainActivity is MainActivity) {
             this.mainActivity = mainActivity

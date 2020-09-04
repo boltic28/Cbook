@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 
-class ContactItemAdapter (private val selectedPosition: Int,
+class ContactItemAdapter (private val selectedPosition: Long,
                           private val contacts: List<Contact>, private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ContactItemAdapter.ContactHolder>() {
 
@@ -20,16 +20,16 @@ class ContactItemAdapter (private val selectedPosition: Int,
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) = holder.bind(contacts[position])
 
-    inner class ContactHolder(private val contactRow: View): RecyclerView.ViewHolder(contactRow){
+    inner class ContactHolder(contactRow: View): RecyclerView.ViewHolder(contactRow){
 
-        private val name = contactRow.findViewById<TextView>(R.id.item_name)
+        private val name = itemView.findViewById<TextView>(R.id.item_name)
 
         @SuppressLint("ResourceAsColor")
         fun bind(contact: Contact){
             name.text = contact.name
-            contactRow.isSelected = adapterPosition == selectedPosition
+            itemView.isSelected = contact.id == selectedPosition
 
-            contactRow.setOnClickListener {
+            itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     listener.onClick(contacts[adapterPosition])
                 }

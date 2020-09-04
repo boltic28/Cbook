@@ -1,34 +1,76 @@
 package com.boltic28.cbook.presentation
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
-import com.boltic28.cbook.data.Contact
+import com.boltic28.cbook.service.ContactService
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity @Inject constructor() : AppCompatActivity() {
 
-    private lateinit var fragmentManager: FragmentManager
+    companion object {
+        const val TAG = "cBookt"
+    }
+
+    lateinit var model: MainActivityModel
+
+
+    var service: ContactService? = null
+    private var isBound = false
     private var dualScreen = false
-    lateinit var contact: Contact
-    lateinit var model: ActivityViewModel
+    private lateinit var serviceConnection: ServiceConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "CREATE MainActivity")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        model = ViewModelProviders.of(this).get(ActivityViewModel::class.java)
+        model = ViewModelProviders.of(this).get(MainActivityModel::class.java)
+
+        serviceConnect()
+        bind()
+
         dualScreen = extraContainer != null
-        fragmentManager = supportFragmentManager
         checkLayoutOrientationAndSetLayoutManager()
     }
 
+    private fun serviceConnect() {
+        serviceConnection = object : ServiceConnection {
+            override fun onServiceConnected(componentName: ComponentName?, iBinder: IBinder?) {
+                Log.d(TAG, "service is connected")
+                val binder = iBinder as ContactService.ContactServiceBinder
+                service = binder.getService()
+                isBound = true
+            }
+            override fun onServiceDisconnected(componentName: ComponentName?) {
+                Log.d(TAG, "service is disconnected")
+                service = null
+                isBound = false
+            }
+        }
+    }
+
     private fun checkLayoutOrientationAndSetLayoutManager() {
-        if (dualScreen) openTwoFragments()
-        else openMainFragment()
+        if (dualScreen) {
+            openTwoFragments()
+        } else {
+            openMainFragment()
+        }
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "DESTROY MainActivity")
+        super.onDestroy()
+        unbind()
     }
 
     fun openContactFragment() {
@@ -37,8 +79,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openTwoFragments() {
+        Log.d(TAG, "Open Dual screen")
         setMainToolbar()
-        fragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
             .replace(
                 R.id.container,
                 MainFragment.getInstance(),
@@ -54,8 +97,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openOneFragmentForContact() {
+        Log.d(TAG, "Open contact screen")
         setContactToolbar()
-        fragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
             .replace(
                 R.id.container,
                 ContactFragment.getInstance(),
@@ -66,8 +110,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openMainFragment() {
+        Log.d(TAG, "Open List screen")
         setMainToolbar()
-        fragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
             .replace(
                 R.id.container,
                 MainFragment.getInstance(),
@@ -86,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setContactToolbar() {
         supportActionBar?.apply {
-            title = model.getContact().value?.name
+            title = model.getOne().name
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
@@ -99,5 +144,17 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun bind() {
+        Log.d(TAG, "bind service")
+        val intent = Intent(this, ContactService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unbind() {
+        Log.d(TAG, "unbind service")
+        unbindService(serviceConnection)
+        serviceConnection.onServiceDisconnected(this.componentName)
     }
 }

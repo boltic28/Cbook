@@ -22,11 +22,7 @@
                 style="@style/Contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/contact_detail_info"
-                app:layout_constraintBottom_toTopOf="@+id/contact_image"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:text="@string/contact_detail_info" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/contact_image"
@@ -37,52 +33,49 @@
                 app:civ_border_color="@color/colorPrimary"
                 app:civ_border_width="4dp"
                 android:contentDescription="@string/contact_s_image"
-                android:src="@drawable/nophoto"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_header" />
-
-
+                android:src="@drawable/nophoto" />
 
             <TextView
                 android:id="@+id/contact_name"
                 style="@style/Contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/full_name"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contact_image" />
+                android:text="@string/full_name" />
 
             <TextView
                 android:id="@+id/contact_number"
                 style="@style/Contact.Number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/_375_29_1234567"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_name" />
+                android:text="@string/_375_29_1234567" />
 
             <TextView
                 android:id="@+id/contact_mail"
                 style="@style/Contact.Mail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/contact_mail_com"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_number" />
+                android:text="@string/contact_mail_com" />
 
             <TextView
                 android:id="@+id/contact_remark"
                 style="@style/Contact.Remark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/remarks_for_contact"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_mail" />
+                android:text="@string/remarks_for_contact" />
+
+            <Button
+                android:id="@+id/contact_button_work"
+                style="@style/Contact.Button"
+                android:text="@string/make_work"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+
+            <SeekBar
+                android:id="@+id/contact_progress"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <Space
                 android:layout_width="match_parent"

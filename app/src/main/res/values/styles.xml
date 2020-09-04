@@ -31,26 +31,51 @@
         <item name="android:paddingStart">@dimen/spaces_around_fragment</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
     <style name="Contact.Number">
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
     <style name="Contact.Mail">
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
     <style name="Contact.Remark">
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">italic</item>
     </style>
+
     <style name="Contact.Photo">
         <item name="android:width">200dp</item>
         <item name="android:height">200dp</item>
         <item name="android:layout_marginTop">24dp</item>
         <item name="android:layout_marginBottom">24dp</item>
         <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="Contact.Button" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Notification.Timer" parent="TextAppearance.Compat.Notification.Time">
+
+    </style>
+
+    <style name="Notification.Progress" parent="Widget.AppCompat.SeekBar">
+        <item name="android:layout_marginStart">32dp</item>
+        <item name="android:layout_marginEnd">32dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+    </style>
+
+    <style name="Notification.Contact" parent="TextAppearance.Compat.Notification.Info">
+        <item name="android:layout_marginStart">32dp</item>
+
     </style>
 </resources>
