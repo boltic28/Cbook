@@ -2,30 +2,28 @@ package com.boltic28.cbook.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.boltic28.cbook.R
+import com.boltic28.cbook.dagger.App
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.DataBase
-import com.boltic28.cbook.presentation.MainActivity
+import com.boltic28.cbook.data.Process
 import javax.inject.Inject
 
-class ContactService @Inject constructor(): Service() {
+class ContactService @Inject constructor() : Service() {
 
-    companion object{
+    companion object {
         const val TAG = "cBookt"
         const val CHANNEL_ID = "CB09"
         const val CHANNEL_NAME = "cBook"
         const val CHANNEL_DESC = "work with contacts"
-        var notificationId = 0
     }
 
     @Inject
@@ -43,35 +41,21 @@ class ContactService @Inject constructor(): Service() {
 
     override fun onCreate() {
         super.onCreate()
+        App.component.injectService(this)
         createNotificationChannel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val contact = intent?.getSerializableExtra("contact")
-//        Runnable {
-//            val timer = (20..30).shuffled().last()
-//            var now = 0
-//
-//            while (now < timer){
-//                try {
-//                    Thread.sleep(990)
-//                    now++
-//                }catch (e: Throwable){
-//                    Log.d(TAG, "ERROR counting")
-//                }
-//            }
-//
-//        }.run()
+        val contact = intent?.getSerializableExtra("contact") as Contact
 
-
-        startWork()
+        startWork(contact)
         Log.d(TAG, "SERVICE: onStartCommand")
         return START_REDELIVER_INTENT
     }
 
-    private fun createNotificationChannel(){
+    private fun createNotificationChannel() {
         Log.d(TAG, "SERVICE: CreateNotificationChannel")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
@@ -84,34 +68,77 @@ class ContactService @Inject constructor(): Service() {
         }
     }
 
-    fun createNotification(){
-        Log.d(TAG, "SERVICE: createNotification")
-        val customView = RemoteViews(packageName, R.layout.notification_small)
-
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        val pending = PendingIntent.getActivity(this,0,intent,0)
-
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_group)
-            .setContentIntent(pending)
-            .setCustomContentView(customView)
-            .setAutoCancel(false)
-            .build()
-
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.let { manager.notify(notificationId++, notification) }
-    }
-
-    private fun startWork(){
+    fun startWork(contact: Contact) {
         Log.d(TAG, "SERVICE: start work...")
+        val timer = (20..25).shuffled().last()
 
+        Thread(Runnable {
+            val process = Process(contact.name, contact.id, timer)
+            createNotification(process)
 
-        // start work with contact 20...30 sec
-        // put it into notification's progress
+            dataBase.addProcess(process)
+
+            while (process.now < process.timer) {
+                Log.d(TAG, "SERVICE:  service counting ${process.now}")
+
+                try {
+                    Thread.sleep(990)
+                    process.now++
+                    dataBase.updateProcess(process)
+                } catch (e: Throwable) {
+                    Log.d(TAG, "ERROR counting")
+                }
+            }
+
+            dataBase.finishProcess(process)
+        }).start()
     }
 
-    inner class ContactServiceBinder: Binder(){
+    private fun createNotification(process: Process) {
+        Thread(Runnable {
+            Log.d(TAG, "SERVICE: createNotification")
+
+            val notificId = process.id.toInt()
+            val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
+                setContentTitle(process.name)
+                setContentText(resources.getString(R.string.notification_text, process.left()))
+                setSmallIcon(R.drawable.ic_group)
+                setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            }
+
+
+            NotificationManagerCompat.from(this).apply {
+                builder.setProgress(process.timer, process.now, false)
+                notify(notificId, builder.build())
+
+
+                while (process.now < process.timer) {
+                    try {
+                        Thread.sleep(990)
+                    } catch (e: Throwable) {
+                        Log.d(TAG, "ERROR counting")
+                    }
+
+                    Log.d(TAG, "SERVICE:  notification counting ${process.now}")
+                    builder.setProgress(process.timer, process.now, false)
+                        .setContentText(
+                            resources.getString(
+                                R.string.notification_text,
+                                process.left()
+                            )
+                        )
+                    notify(notificId, builder.build())
+                }
+                builder.setContentText(resources.getString(R.string.notification_done))
+                    .setProgress(0, 0, false)
+
+
+                notify(notificId, builder.build())
+            }
+        }).start()
+    }
+
+    inner class ContactServiceBinder : Binder() {
         fun getService(): ContactService {
             Log.d(TAG, "SERVICE: Binder")
             return this@ContactService
