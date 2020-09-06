@@ -143,10 +143,7 @@ class DataBase {
     )
     private var dbContact: Contact
     private var selectedContactId: Long
-//    private var processes = mutableListOf<MutableLiveData<Process>>()
     private var processes = mutableListOf<Process>()
-
-    private val workingContacts = mutableListOf<Contact>()
 
     init {
         dbContact = dbContacts[0]
@@ -171,57 +168,19 @@ class DataBase {
     fun getOne() = dbContact
     fun getAll() = dbContacts
 
-    fun goWork(contact: Contact){
-        workingContacts.add(contact)
-    }
-
-    fun setFree(contact: Contact){
-        workingContacts.remove(contact)
-    }
-
-    fun addProcess(process: Process){
-//        Log.d(TAG, "DB: add process: ${process.name}")
-//        val mProcess = MutableLiveData<Process>()
-//        mProcess.postValue(process)
-
+    fun startProcess(process: Process) {
+        Log.d(TAG, "DB: start process: ${process.name}")
         processes.add(process)
     }
 
-    fun updateProcess(process: Process){
-//        processes.forEach { pr->
-//            if (pr.value?.id == process.id){
-//                Log.d(TAG, "DB: update process: ${process.name} left: ${process.left()} sec.")
-//                pr.postValue(process)
-//            }
-//        }
-        processes.forEach { pr->
-            if (pr.id == process.id){
-                Log.d(TAG, "DB: update process: ${process.name} left: ${process.left()} sec.")
-                pr.now = process.now
-            }
-        }
-    }
-
-    fun finishProcess(process: Process){
+    fun finishProcess(process: Process) {
         Log.d(TAG, "DB: finish process: ${process.name}")
-//        processes.forEach { pr->
-//            if (pr.value?.id == process.id){
-//                Log.d(TAG, "DB: delete process: ${process.name}")
-//                processes.remove(pr)
-//            }
-//        }
-
         processes.remove(process)
     }
 
-    fun getProcessFor(contact: Contact): Process?{ // change to LiveData
-//        processes.forEach { pr->
-//            if (pr.value?.id == contact.id){
-//                return pr
-//            }
-//        }
-        processes.forEach { pr->
-            if (pr.id == contact.id){
+    fun getProcessFor(contact: Contact): Process? {
+        processes.forEach { pr ->
+            if (pr.id == contact.id) {
                 return pr
             }
         }

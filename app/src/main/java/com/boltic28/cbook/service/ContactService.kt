@@ -76,7 +76,7 @@ class ContactService @Inject constructor() : Service() {
             val process = Process(contact.name, contact.id, timer)
             createNotification(process)
 
-            dataBase.addProcess(process)
+            dataBase.startProcess(process)
 
             while (process.now < process.timer) {
                 Log.d(TAG, "SERVICE:  service counting ${process.now}")
@@ -84,7 +84,6 @@ class ContactService @Inject constructor() : Service() {
                 try {
                     Thread.sleep(990)
                     process.now++
-                    dataBase.updateProcess(process)
                 } catch (e: Throwable) {
                     Log.d(TAG, "ERROR counting")
                 }
