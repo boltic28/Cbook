@@ -1,7 +1,6 @@
 package com.boltic28.cbook.presentation
 
 import android.app.Activity
-import android.icu.number.NumberFormatter.with
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -26,21 +25,22 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
         }
     }
 
-    lateinit var contact: Contact
-    lateinit var model: ContactFragmentModel
-    lateinit var mainActivity: MainActivity
-    var countingThread: Thread? = null
+    private lateinit var contact: Contact
+    private lateinit var model: ContactFragmentModel
+    private lateinit var parentActivity: MainActivity
+    private var countingThread: Thread? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "Contact fragment: CREATED")
         super.onViewCreated(view, savedInstanceState)
-        getMainActivity()
+        getParentActivity()
         setButtons()
 
         model = ViewModelProviders.of(this).get(ContactFragmentModel::class.java)
         contact = model.getContact()
+
         bindData(contact)
-        checkOnWork()
+        checkForProcess()
     }
 
     override fun onPause() {
@@ -48,7 +48,20 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
         super.onPause()
     }
 
-    private fun checkOnWork() {
+    private fun bindData(contact: Contact) {
+        contact_name.text = contact.name
+        contact_number.text = contact.number
+        contact_mail.text = contact.mail
+        contact_remark.text = contact.remark
+        Picasso.get()
+            .load("https://randomuser.me/api/portraits/men/${contact.id}.jpg")
+            .placeholder(R.drawable.nophoto)
+            .error(R.drawable.nophoto)
+            .transform(CircleTransform())
+            .into(contact_image1)
+    }
+
+    private fun checkForProcess() {
         Log.d(TAG, "Contact fragment: CheckProcess")
         val process = model.dataBase.getProcessFor(contact)
         if (process != null) {
@@ -57,21 +70,6 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
             countingThread = WorkThread(process)
             countingThread?.start()
         }
-    }
-
-    private fun setProcessingData(process: Process) {
-        Log.d(TAG, "Contact fragment: gotten new data: ${process.name} ${process.left()}")
-        contact_button_work.text =
-            resources.getString(R.string.contact_button_timer, process.left().toString())
-        contact_progress.max = process.timer
-        contact_progress.progress = process.now
-    }
-
-    private fun turnOnButton() {
-        Log.d(TAG, "Contact fragment: process is finished")
-        contact_button_work.isEnabled = true
-        contact_button_work.text = resources.getString(R.string.make_work)
-        contact_progress.visibility = View.INVISIBLE
     }
 
     private fun setButtons() {
@@ -84,36 +82,19 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun startWorking() {
-        mainActivity.service?.startWork(contact)
+        parentActivity.service?.startWork(contact)
         Thread.sleep(100)
-        checkOnWork()
+        checkForProcess()
     }
 
-    private fun bindData(contact: Contact) {
-        contact_name.text = contact.name
-        contact_number.text = contact.number
-        contact_mail.text = contact.mail
-        contact_remark.text = contact.remark
-        loadPhoto(contact)
-    }
-
-    private fun loadPhoto(contact: Contact) {
-        Picasso.get()
-            .load("https://randomuser.me/api/portraits/men/${contact.id}.jpg")
-            .placeholder(R.drawable.nophoto)
-            .error(R.drawable.nophoto)
-            .transform(CircleTransform())
-            .into(contact_image1);
-    }
-
-    private fun getMainActivity() {
+    private fun getParentActivity() {
         val mainActivity: Activity? = activity
         if (mainActivity is MainActivity) {
-            this.mainActivity = mainActivity
+            this.parentActivity = mainActivity
         }
     }
 
-    inner class WorkThread(var process: Process?) : Thread() {
+    inner class WorkThread(private var process: Process?) : Thread() {
 
         override fun run() {
             Log.d(TAG, "Contact fragment: ObserveProcess")
@@ -125,11 +106,27 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
                     Log.d(TAG, "Contact fragment: counting left: ${process?.left()}")
                 }
                 if (process == null) {
-                    contact_progress.post { turnOnButton() }
+                    contact_progress.post { turnOnButtonStartWork() }
                 }
             }catch (e: Throwable){
                 Log.d(TAG, "Contact fragment: ------ERROR------ Stop the Thread")
             }
         }
     }
+
+    private fun setProcessingData(process: Process) {
+        Log.d(TAG, "Contact fragment: gotten new data: ${process.name} ${process.left()}")
+        contact_button_work.text =
+            resources.getString(R.string.contact_button_timer, process.left().toString())
+        contact_progress.max = process.timer
+        contact_progress.progress = process.now
+    }
+
+    private fun turnOnButtonStartWork() {
+        Log.d(TAG, "Contact fragment: process is finished")
+        contact_button_work.isEnabled = true
+        contact_button_work.text = resources.getString(R.string.make_work)
+        contact_progress.visibility = View.INVISIBLE
+    }
+
 }

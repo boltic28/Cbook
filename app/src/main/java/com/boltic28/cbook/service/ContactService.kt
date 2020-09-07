@@ -97,18 +97,19 @@ class ContactService @Inject constructor() : Service() {
         Thread(Runnable {
             Log.d(TAG, "SERVICE: createNotification")
 
-            val notificId = process.id.toInt()
+            val notificationId = process.id.toInt()
             val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
                 setContentTitle(process.name)
                 setContentText(resources.getString(R.string.notification_text, process.left()))
                 setSmallIcon(R.drawable.ic_group)
-                setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                priority = NotificationCompat.PRIORITY_DEFAULT
+                startForeground(notificationId, this.build())
             }
 
 
             NotificationManagerCompat.from(this).apply {
                 builder.setProgress(process.timer, process.now, false)
-                notify(notificId, builder.build())
+                notify(notificationId, builder.build())
 
 
                 while (process.now < process.timer) {
@@ -126,13 +127,13 @@ class ContactService @Inject constructor() : Service() {
                                 process.left()
                             )
                         )
-                    notify(notificId, builder.build())
+                    notify(notificationId, builder.build())
                 }
                 builder.setContentText(resources.getString(R.string.notification_done))
                     .setProgress(0, 0, false)
 
 
-                notify(notificId, builder.build())
+                notify(notificationId, builder.build())
             }
         }).start()
     }

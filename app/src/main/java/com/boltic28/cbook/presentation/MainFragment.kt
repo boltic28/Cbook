@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boltic28.cbook.R
@@ -34,14 +33,8 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
 
         getMainActivity()
 
-
         model = ViewModelProviders.of(this).get(MainFragmentModel::class.java)
         setAdapter(model.getTestAll())
-//        model.getAll().observe(this,
-//            Observer<List<Contact>> { setAdapter(it) })
-//        model.getContact().observe(this,
-//            Observer<Contact> { mainActivity.openContactFragment() })
-
     }
 
     private fun setAdapter(list: List<Contact>) {

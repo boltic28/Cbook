@@ -1,6 +1,5 @@
 package com.boltic28.cbook.dagger
 
-import com.boltic28.cbook.data.DataBase
 import com.boltic28.cbook.presentation.*
 import com.boltic28.cbook.service.ContactService
 import dagger.Component

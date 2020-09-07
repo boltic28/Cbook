@@ -1,7 +1,6 @@
 package com.boltic28.cbook.presentation
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.boltic28.cbook.dagger.App
 import com.boltic28.cbook.data.Contact
@@ -21,19 +20,9 @@ class MainFragmentModel @Inject constructor(): ViewModel() {
         App.component.injectModel(this)
     }
 
-    fun getContact(): Contact{
-        Log.d(TAG, "MFM getContact")
-        return dataBase.getOne()
-    }
-
     fun setContact(contact: Contact){
         Log.d(TAG, "MFM setContact")
         dataBase.setContact(contact)
-    }
-
-    fun getAll(): LiveData<List<Contact>>{
-        Log.d(TAG, "MFM getAllContacts")
-        return dataBase.contacts
     }
 
     fun getSelectedId(): Long {

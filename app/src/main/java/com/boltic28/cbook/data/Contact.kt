@@ -25,5 +25,4 @@ class Contact(): Serializable {
     var mail: String = "contact@mail.com"
     var remark: String = "nothing"
     var photo: String = ""
-    var isSelected = false
 }

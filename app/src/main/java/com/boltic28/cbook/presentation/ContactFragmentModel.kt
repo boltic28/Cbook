@@ -1,7 +1,6 @@
 package com.boltic28.cbook.presentation
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.boltic28.cbook.dagger.App
 import com.boltic28.cbook.data.Contact
@@ -24,15 +23,5 @@ class ContactFragmentModel @Inject constructor(): ViewModel() {
     fun getContact(): Contact{
         Log.d(TAG, "CFM getContact")
         return dataBase.getOne()
-    }
-
-    fun setContact(contact: Contact){
-        Log.d(TAG, "CFM setContact")
-        dataBase.setContact(contact)
-    }
-
-    fun getAll(): LiveData<List<Contact>>{
-        Log.d(TAG, "CFM getAllContacts")
-        return dataBase.contacts
     }
 }
