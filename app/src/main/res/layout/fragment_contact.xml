@@ -24,16 +24,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/contact_detail_info" />
 
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/contact_image"
+            <ImageView
+                android:id="@+id/contact_image1"
                 style="@style/Contact.Photo"
                 android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="4dp"
-                android:contentDescription="@string/contact_s_image"
-                android:src="@drawable/nophoto" />
+                android:layout_height="200dp" />
 
             <TextView
                 android:id="@+id/contact_name"

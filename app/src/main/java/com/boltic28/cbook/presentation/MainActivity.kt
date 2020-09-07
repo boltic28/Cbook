@@ -1,14 +1,18 @@
 package com.boltic28.cbook.presentation
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.service.ContactService
@@ -19,6 +23,7 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
 
     companion object {
         const val TAG = "cBookt"
+        const val PERMISSION_REQUEST_CODE = 1010
     }
 
     lateinit var model: MainActivityModel
@@ -41,6 +46,28 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
 
         dualScreen = extraContainer != null
         checkLayoutOrientationAndSetLayoutManager()
+    }
+
+    private fun checkPermissions() {
+        val checkPermissionResultStorageRead = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        val checkPermissionResultInternet = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.INTERNET
+        )
+
+        if (checkPermissionResultInternet != PackageManager.PERMISSION_GRANTED &&
+            checkPermissionResultStorageRead != PackageManager.PERMISSION_GRANTED
+        ) {
+            val permissionArray =
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.INTERNET
+                )
+            ActivityCompat.requestPermissions(this, permissionArray, PERMISSION_REQUEST_CODE)
+        }
     }
 
     private fun serviceConnect() {

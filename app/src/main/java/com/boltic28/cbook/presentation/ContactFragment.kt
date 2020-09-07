@@ -1,6 +1,7 @@
 package com.boltic28.cbook.presentation
 
 import android.app.Activity
+import android.icu.number.NumberFormatter.with
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.Process
+import com.boltic28.cbook.util.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_contact.*
 import javax.inject.Inject
@@ -96,13 +98,12 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun loadPhoto(contact: Contact) {
-
-        if (contact.photo.isEmpty()) {
-            Picasso.get().load(R.drawable.nophoto).into(contact_image)
-        } else {
-            //load file from storage
-            //Picasso.get().load(File("path", "photo.jpg")).into(contact_image)
-        }
+        Picasso.get()
+            .load("https://randomuser.me/api/portraits/men/${contact.id}.jpg")
+            .placeholder(R.drawable.nophoto)
+            .error(R.drawable.nophoto)
+            .transform(CircleTransform())
+            .into(contact_image1);
     }
 
     private fun getMainActivity() {

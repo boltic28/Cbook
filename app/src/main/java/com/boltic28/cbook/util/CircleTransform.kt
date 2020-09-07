@@ -11,6 +11,7 @@ class CircleTransform: Transformation {
     }
 
     override fun transform(source: Bitmap): Bitmap {
+
         val size = min(source.width, source.height)
 
         val x = (source.width - size) / 2

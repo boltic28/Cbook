@@ -55,6 +55,7 @@
         <item name="android:height">200dp</item>
         <item name="android:layout_marginTop">24dp</item>
         <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
 
