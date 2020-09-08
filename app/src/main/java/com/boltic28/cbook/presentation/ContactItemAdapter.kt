@@ -10,7 +10,8 @@ import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 
 class ContactItemAdapter (private val selectedPosition: Long,
-                          private val contacts: List<Contact>, private val listener: OnItemClickListener
+                          private val contacts: List<Contact>,
+                          private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ContactItemAdapter.ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

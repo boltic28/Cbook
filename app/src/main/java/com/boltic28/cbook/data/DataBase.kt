@@ -1,5 +1,6 @@
 package com.boltic28.cbook.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -163,12 +164,14 @@ class DataBase {
     }
 
     fun setContact(id: Long){
+        Log.d(TAG, "DB: create contact with id $id")
         setContact(getById(id))
     }
 
     private fun getById(id: Long): Contact{
         dbContacts.forEach {
             if (it.id == id){
+                Log.d(TAG, "DB: create contact with name ${it.name}")
                 return it
             }
 

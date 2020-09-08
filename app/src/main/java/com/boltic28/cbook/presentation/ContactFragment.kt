@@ -5,6 +5,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
@@ -69,9 +70,23 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
         if (process != null) {
             contact_button_work.isEnabled = false
             contact_progress.visibility = View.VISIBLE
+
+//            lookingForProcess()
+
             countingThread = WorkThread(process)
             countingThread?.start()
         }
+    }
+
+    private fun lookingForProcess() {
+        (activity as? Worker)?.mGetProcessFor(contact)?.observe(this,
+            Observer {process ->
+                if (process != null) {
+                    setProcessingData(process)
+                }else{
+                    turnOnButtonStartWork()
+                }
+            })
     }
 
     private fun setButtons() {

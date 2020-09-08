@@ -12,8 +12,9 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.boltic28.cbook.R
-import com.boltic28.cbook.dagger.App
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.DataBase
 import com.boltic28.cbook.data.Process
@@ -28,6 +29,7 @@ class ContactService @Inject constructor() : Service() {
         const val CHANNEL_NAME = "cBook"
         const val CHANNEL_DESC = "work with contacts"
         var processes = mutableListOf<Process>()
+        var mProcesses = mutableListOf<MutableLiveData<Process?>>()
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -67,6 +69,7 @@ class ContactService @Inject constructor() : Service() {
                 try {
                     Thread.sleep(990)
                     process.now++
+// live                   refreshProcess(process)
                 } catch (e: Throwable) {
                     Log.d(TAG, "ERROR counting")
                 }
@@ -93,14 +96,52 @@ class ContactService @Inject constructor() : Service() {
         return null
     }
 
+    //live
+    fun mGetProcessFor(contact: Contact): LiveData<Process?>? {
+        mProcesses.forEach { pr ->
+            if (pr.value?.id == contact.id) {
+                return pr
+            }
+        }
+        return null
+    }
+    //live
+    fun deleteProcess(process: LiveData<Process?>){
+        mProcesses.forEach { pr ->
+            if (pr == process) {
+                mProcesses.remove(pr)
+            }
+        }
+    }
+
     private fun startProcess(process: Process) {
         Log.d(DataBase.TAG, "SERVICE: start process: ${process.name}, size: ${processes.size}")
         processes.add(process)
+        //live
+        val mProcess = MutableLiveData<Process>()
+        mProcess.postValue(process)
+    }
+        //live
+    private fun refreshProcess(process: Process) {
+        Log.d(DataBase.TAG, "SERVICE: start process: ${process.name}, size: ${processes.size}")
+
+        mProcesses.forEach { pr ->
+            if (pr.value?.id == process.id) {
+                pr.postValue(process)
+            }
+        }
     }
 
     private fun finishProcess(process: Process) {
         Log.d(DataBase.TAG, "SERVICE: finish process: ${process.name}")
         processes.remove(process)
+        //live
+        mProcesses.forEach { pr ->
+            if (pr.value == process) {
+                pr.postValue(null)
+            }
+        }
+
     }
 
     private fun createNotificationChannel() {
@@ -123,13 +164,16 @@ class ContactService @Inject constructor() : Service() {
             Log.d(TAG, "SERVICE: createNotification")
 
             val bundle = Bundle()
-            bundle.putLong("contact", process.id)
+            Log.d(TAG, "SERVICE: ${process.name} id ${process.id} was putted in bundle ")
+            bundle.putLong("id", process.id)
 
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            intent.putExtras(bundle)
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                putExtras(bundle)
+                putExtra("id", process.id)
+            }
 
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             val notificationId = process.id.toInt()
             val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
@@ -141,11 +185,9 @@ class ContactService @Inject constructor() : Service() {
                 startForeground(notificationId, this.build())
             }
 
-
             NotificationManagerCompat.from(this).apply {
                 builder.setProgress(process.timer, process.now, false)
                 notify(notificationId, builder.build())
-
 
                 while (process.now < process.timer) {
                     try {

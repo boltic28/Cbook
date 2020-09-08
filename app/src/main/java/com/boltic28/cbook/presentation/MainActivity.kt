@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
@@ -39,10 +40,10 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
 
         model = ViewModelProviders.of(this).get(MainActivityModel::class.java)
 
-        intent.extras?.containsKey("contact")?.let{
+        intent.extras?.containsKey("id")?.let{
             if (it) {
-                model.dataBase.setContact(intent.getLongExtra("contact", 0))
-                Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne()}")
+                model.dataBase.setContact(intent.extras!!.getLong("id", 1))
+                Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne().name}")
                 isTarget = true
             }
         }
@@ -71,7 +72,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
     }
 
     private fun checkLayoutOrientationAndSetLayoutManager() {
-        Handler(mainLooper).postDelayed(Runnable {
+        Handler(mainLooper).postDelayed({
             if (dualScreen) {
                 openTwoFragments()
             } else {
@@ -151,7 +152,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            isTarget = false
+            openMainFragment()
             setMainToolbar()
             return true
         }
@@ -181,5 +183,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
 
     override fun getProcessFor(contact: Contact): Process? {
         return service?.getProcessFor(contact)
+    }
+
+    override fun mGetProcessFor(contact: Contact): LiveData<Process?>? {
+        return service?.mGetProcessFor(contact)
+    }
+
+    override fun deleteProcess(process: LiveData<Process?>) {
+        service?.deleteProcess(process)
     }
 }
