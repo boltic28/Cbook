@@ -2,10 +2,12 @@ package com.boltic28.cbook.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.Build
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -15,6 +17,7 @@ import com.boltic28.cbook.dagger.App
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.DataBase
 import com.boltic28.cbook.data.Process
+import com.boltic28.cbook.presentation.MainActivity
 import javax.inject.Inject
 
 class ContactService @Inject constructor() : Service() {
@@ -24,10 +27,8 @@ class ContactService @Inject constructor() : Service() {
         const val CHANNEL_ID = "CB09"
         const val CHANNEL_NAME = "cBook"
         const val CHANNEL_DESC = "work with contacts"
+        var processes = mutableListOf<Process>()
     }
-
-    @Inject
-    lateinit var dataBase: DataBase
 
     override fun onBind(intent: Intent): IBinder {
         Log.d(TAG, "SERVICE: onBind")
@@ -41,7 +42,6 @@ class ContactService @Inject constructor() : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        App.component.injectService(this)
         createNotificationChannel()
     }
 
@@ -51,6 +51,56 @@ class ContactService @Inject constructor() : Service() {
         startWork(contact)
         Log.d(TAG, "SERVICE: onStartCommand")
         return START_REDELIVER_INTENT
+    }
+
+    fun startWork(contact: Contact) {
+        Log.d(TAG, "SERVICE: start work...")
+        val timer = (25..35).shuffled().last()
+
+        Thread(Runnable {
+            val process = Process(contact.name, contact.id, timer)
+            createNotification(process)
+
+            startProcess(process)
+
+            while (process.now < process.timer) {
+                try {
+                    Thread.sleep(990)
+                    process.now++
+                } catch (e: Throwable) {
+                    Log.d(TAG, "ERROR counting")
+                }
+            }
+
+            finishProcess(process)
+        }).start()
+    }
+
+    fun getProcessFor(contact: Contact): Process? {
+        processes.forEach { pr ->
+            if (pr.id == contact.id) {
+                Log.d(
+                    DataBase.TAG,
+                    "SERVICE: process for ${contact.name} is founded, left: ${pr.left()}s"
+                )
+                return pr
+            }
+        }
+        Log.d(
+            DataBase.TAG,
+            "SERVICE: process for ${contact.name} is not founded: size: ${processes.size}"
+        )
+        return null
+    }
+
+    private fun startProcess(process: Process) {
+        Log.d(DataBase.TAG, "SERVICE: start process: ${process.name}, size: ${processes.size}")
+        processes.add(process)
+    }
+
+    private fun finishProcess(process: Process) {
+        Log.d(DataBase.TAG, "SERVICE: finish process: ${process.name}")
+        processes.remove(process)
     }
 
     private fun createNotificationChannel() {
@@ -68,40 +118,25 @@ class ContactService @Inject constructor() : Service() {
         }
     }
 
-    fun startWork(contact: Contact) {
-        Log.d(TAG, "SERVICE: start work...")
-        val timer = (20..25).shuffled().last()
-
-        Thread(Runnable {
-            val process = Process(contact.name, contact.id, timer)
-            createNotification(process)
-
-            dataBase.startProcess(process)
-
-            while (process.now < process.timer) {
-                Log.d(TAG, "SERVICE:  service counting ${process.now}")
-
-                try {
-                    Thread.sleep(990)
-                    process.now++
-                } catch (e: Throwable) {
-                    Log.d(TAG, "ERROR counting")
-                }
-            }
-
-            dataBase.finishProcess(process)
-        }).start()
-    }
-
     private fun createNotification(process: Process) {
         Thread(Runnable {
             Log.d(TAG, "SERVICE: createNotification")
+
+            val bundle = Bundle()
+            bundle.putLong("contact", process.id)
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.putExtras(bundle)
+
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
             val notificationId = process.id.toInt()
             val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
                 setContentTitle(process.name)
                 setContentText(resources.getString(R.string.notification_text, process.left()))
                 setSmallIcon(R.drawable.ic_group)
+                setContentIntent(pendingIntent)
                 priority = NotificationCompat.PRIORITY_DEFAULT
                 startForeground(notificationId, this.build())
             }
@@ -115,23 +150,20 @@ class ContactService @Inject constructor() : Service() {
                 while (process.now < process.timer) {
                     try {
                         Thread.sleep(990)
+                        builder.setProgress(process.timer, process.now, false)
+                            .setContentText(
+                                resources.getString(
+                                    R.string.notification_text,
+                                    process.left()
+                                )
+                            )
+                        notify(notificationId, builder.build())
                     } catch (e: Throwable) {
                         Log.d(TAG, "ERROR counting")
                     }
-
-                    Log.d(TAG, "SERVICE:  notification counting ${process.now}")
-                    builder.setProgress(process.timer, process.now, false)
-                        .setContentText(
-                            resources.getString(
-                                R.string.notification_text,
-                                process.left()
-                            )
-                        )
-                    notify(notificationId, builder.build())
                 }
                 builder.setContentText(resources.getString(R.string.notification_done))
                     .setProgress(0, 0, false)
-
 
                 notify(notificationId, builder.build())
             }

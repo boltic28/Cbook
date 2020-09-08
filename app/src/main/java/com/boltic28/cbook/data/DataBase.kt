@@ -1,9 +1,7 @@
 package com.boltic28.cbook.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.boltic28.cbook.presentation.MainFragmentModel
 
 class DataBase {
 
@@ -143,7 +141,6 @@ class DataBase {
     )
     private var dbContact: Contact
     private var selectedContactId: Long
-    private var processes = mutableListOf<Process>()
 
     init {
         dbContact = dbContacts[0]
@@ -162,28 +159,23 @@ class DataBase {
 
     fun setContact(contact: Contact) {
         dbContact = contact
-        selectedContactId = contact.id
+        selectedContactId = dbContact.id
+    }
+
+    fun setContact(id: Long){
+        setContact(getById(id))
+    }
+
+    private fun getById(id: Long): Contact{
+        dbContacts.forEach {
+            if (it.id == id){
+                return it
+            }
+
+        }
+        return dbContacts[0]
     }
 
     fun getOne() = dbContact
     fun getAll() = dbContacts
-
-    fun startProcess(process: Process) {
-        Log.d(TAG, "DB: start process: ${process.name}")
-        processes.add(process)
-    }
-
-    fun finishProcess(process: Process) {
-        Log.d(TAG, "DB: finish process: ${process.name}")
-        processes.remove(process)
-    }
-
-    fun getProcessFor(contact: Contact): Process? {
-        processes.forEach { pr ->
-            if (pr.id == contact.id) {
-                return pr
-            }
-        }
-        return null
-    }
 }

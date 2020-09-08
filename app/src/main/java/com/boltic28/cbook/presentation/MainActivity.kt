@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
@@ -25,6 +26,7 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
 
     var service: ContactService? = null
     private var isBound = false
+    private var isTarget = false
     private var dualScreen = false
     private lateinit var serviceConnection: ServiceConnection
 
@@ -34,6 +36,14 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         model = ViewModelProviders.of(this).get(MainActivityModel::class.java)
+
+        intent.extras?.containsKey("contact")?.let{
+            if (it) {
+                model.dataBase.setContact(intent.getLongExtra("contact", 0))
+                Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne()}")
+                isTarget = true
+            }
+        }
 
         serviceConnect()
         bind()
@@ -59,11 +69,13 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
     }
 
     private fun checkLayoutOrientationAndSetLayoutManager() {
-        if (dualScreen) {
-            openTwoFragments()
-        } else {
-            openMainFragment()
-        }
+        Handler(mainLooper).postDelayed(Runnable {
+            if (dualScreen) {
+                openTwoFragments()
+            } else {
+                openMainFragment()
+            }
+        }, 100)
     }
 
     override fun onDestroy() {
@@ -109,15 +121,19 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
     }
 
     private fun openMainFragment() {
-        Log.d(TAG, "Open List screen")
-        setMainToolbar()
-        supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.container,
-                MainFragment.getInstance(),
-                MainFragment.FRAG_TAG
-            )
-            .commit()
+        if (isTarget){
+            openContactFragment()
+        }else {
+            Log.d(TAG, "Open List screen")
+            setMainToolbar()
+            supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.container,
+                    MainFragment.getInstance(),
+                    MainFragment.FRAG_TAG
+                )
+                .commit()
+        }
     }
 
     private fun setMainToolbar() {

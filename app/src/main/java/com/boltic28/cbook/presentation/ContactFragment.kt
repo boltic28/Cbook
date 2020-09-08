@@ -2,6 +2,7 @@ package com.boltic28.cbook.presentation
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -40,12 +41,16 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
         contact = model.getContact()
 
         bindData(contact)
-        checkForProcess()
     }
 
-    override fun onPause() {
-        countingThread?.interrupt()
-        super.onPause()
+    override fun onResume() {
+        checkForProcess()
+        super.onResume()
+    }
+
+    override fun onStop() {
+        countingThread?.interrupt()// attention screen
+        super.onStop()
     }
 
     private fun bindData(contact: Contact) {
@@ -63,7 +68,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private fun checkForProcess() {
         Log.d(TAG, "Contact fragment: CheckProcess")
-        val process = model.dataBase.getProcessFor(contact)
+        val process = parentActivity.service?.getProcessFor(contact) // check later
         if (process != null) {
             contact_button_work.isEnabled = false
             contact_progress.visibility = View.VISIBLE
@@ -83,8 +88,10 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private fun startWorking() {
         parentActivity.service?.startWork(contact)
-        Thread.sleep(100)
-        checkForProcess()
+        Handler(parentActivity.mainLooper).postDelayed({
+            checkForProcess()
+        }, 100)
+
     }
 
     private fun getParentActivity() {
@@ -101,15 +108,16 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
             try {
                 while (process != null) {
                     contact_progress.post { setProcessingData(process!!) }
-                    sleep(980)
-                    process = model.dataBase.getProcessFor(contact)
                     Log.d(TAG, "Contact fragment: counting left: ${process?.left()}")
+                    if (process?.left() == 0) {
+                        Log.d(TAG, "Contact fragment: work is finished")
+                        contact_progress.post { turnOnButtonStartWork() }
+                        break
+                    }
+                    sleep(990)
                 }
-                if (process == null) {
-                    contact_progress.post { turnOnButtonStartWork() }
-                }
-            }catch (e: Throwable){
-                Log.d(TAG, "Contact fragment: ------ERROR------ Stop the Thread")
+            } catch (e: Throwable) {
+                Log.d(TAG, "Contact fragment: ------ERROR------ Stop the Thread: $e")
             }
         }
     }
