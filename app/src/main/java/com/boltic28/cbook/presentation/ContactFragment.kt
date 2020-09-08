@@ -27,13 +27,11 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private lateinit var contact: Contact
     private lateinit var model: ContactFragmentModel
-    private var worker: Worker? = null
     private var countingThread: Thread? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "Contact fragment: CREATED")
         super.onViewCreated(view, savedInstanceState)
-        setWorker()
         setButtons()
 
         model = ViewModelProviders.of(this).get(ContactFragmentModel::class.java)
@@ -48,7 +46,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     override fun onStop() {
-        countingThread?.interrupt()// attention screen
+        countingThread?.interrupt()
         super.onStop()
     }
 
@@ -67,7 +65,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private fun checkForProcess() {
         Log.d(TAG, "Contact fragment: CheckProcess")
-        val process = worker?.getProcessFor(contact) // check later
+        val process = (activity as? Worker)?.getProcessFor(contact)
         if (process != null) {
             contact_button_work.isEnabled = false
             contact_progress.visibility = View.VISIBLE
@@ -86,15 +84,11 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun startWorking() {
-        worker?.startWork(contact)
+        (activity as? Worker)?.startWork(contact)
         Handler(context?.mainLooper!!).postDelayed({
             checkForProcess()
         }, 100)
 
-    }
-
-    private fun setWorker() {
-        worker = activity as? Worker
     }
 
     inner class WorkThread(private var process: Process?) : Thread() {
