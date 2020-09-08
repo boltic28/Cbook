@@ -1,6 +1,5 @@
 package com.boltic28.cbook.presentation
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -25,13 +24,9 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
 
     lateinit var model: MainFragmentModel
 
-    lateinit var mainActivity: MainActivity
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG,"CREATE MainFragment")
         super.onViewCreated(view, savedInstanceState)
-
-        getMainActivity()
 
         model = ViewModelProviders.of(this).get(MainFragmentModel::class.java)
         setAdapter(model.getTestAll())
@@ -51,16 +46,8 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
                     ContactItemAdapter.OnItemClickListener {
                     override fun onClick(contact: Contact) {
                         model.setContact(contact)
-                        mainActivity.openContactFragment()
+                        (activity as? Worker)?.openContactFragment()
                     }
                 })
-    }
-
-    private fun getMainActivity() {
-        Log.d(MainActivity.TAG,"MainFragment open Contact")
-        val mainActivity: Activity? = activity
-        if (mainActivity is MainActivity) {
-            this.mainActivity = mainActivity
-        }
     }
 }

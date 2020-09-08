@@ -12,11 +12,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
+import com.boltic28.cbook.data.Contact
+import com.boltic28.cbook.data.Process
 import com.boltic28.cbook.service.ContactService
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity @Inject constructor() : AppCompatActivity() {
+class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
 
     companion object {
         const val TAG = "cBookt"
@@ -82,11 +84,6 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
         Log.d(TAG, "DESTROY MainActivity")
         super.onDestroy()
         unbind()
-    }
-
-    fun openContactFragment() {
-        if (dualScreen) openTwoFragments()
-        else openOneFragmentForContact()
     }
 
     private fun openTwoFragments() {
@@ -171,5 +168,18 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
         Log.d(TAG, "unbind service")
         unbindService(serviceConnection)
         serviceConnection.onServiceDisconnected(this.componentName)
+    }
+
+    override fun openContactFragment() {
+        if (dualScreen) openTwoFragments()
+        else openOneFragmentForContact()
+    }
+
+    override fun startWork(contact: Contact) {
+        service?.startWork(contact)
+    }
+
+    override fun getProcessFor(contact: Contact): Process? {
+        return service?.getProcessFor(contact)
     }
 }

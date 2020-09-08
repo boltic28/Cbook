@@ -1,6 +1,5 @@
 package com.boltic28.cbook.presentation
 
-import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -28,13 +27,13 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private lateinit var contact: Contact
     private lateinit var model: ContactFragmentModel
-    private lateinit var parentActivity: MainActivity
+    private var worker: Worker? = null
     private var countingThread: Thread? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "Contact fragment: CREATED")
         super.onViewCreated(view, savedInstanceState)
-        getParentActivity()
+        setWorker()
         setButtons()
 
         model = ViewModelProviders.of(this).get(ContactFragmentModel::class.java)
@@ -68,7 +67,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private fun checkForProcess() {
         Log.d(TAG, "Contact fragment: CheckProcess")
-        val process = parentActivity.service?.getProcessFor(contact) // check later
+        val process = worker?.getProcessFor(contact) // check later
         if (process != null) {
             contact_button_work.isEnabled = false
             contact_progress.visibility = View.VISIBLE
@@ -87,18 +86,15 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun startWorking() {
-        parentActivity.service?.startWork(contact)
-        Handler(parentActivity.mainLooper).postDelayed({
+        worker?.startWork(contact)
+        Handler(context?.mainLooper!!).postDelayed({
             checkForProcess()
         }, 100)
 
     }
 
-    private fun getParentActivity() {
-        val mainActivity: Activity? = activity
-        if (mainActivity is MainActivity) {
-            this.parentActivity = mainActivity
-        }
+    private fun setWorker() {
+        worker = activity as? Worker
     }
 
     inner class WorkThread(private var process: Process?) : Thread() {
