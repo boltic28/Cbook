@@ -14,5 +14,9 @@ class MainActivityModel @Inject constructor(): ViewModel() {
         App.component.injectModel(this)
     }
 
+    fun resetContact(){
+        dataBase.resetContact()
+    }
+
     fun getOne() = dataBase.getOne()
 }

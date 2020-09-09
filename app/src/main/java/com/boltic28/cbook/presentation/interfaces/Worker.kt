@@ -8,7 +8,9 @@ interface Worker {
 
     fun startWork(contact: Contact)
     fun getProcessFor(contact: Contact): Process?
+
     fun openContactFragment()
+    fun setContactToolbar()
 
     fun mGetProcesses(): LiveData<List<Process>>?
     fun deleteProcess(process: Process)

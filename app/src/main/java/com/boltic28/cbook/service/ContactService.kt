@@ -105,13 +105,13 @@ class ContactService @Inject constructor() : Service(),
             bundle.putLong(CONTACT_ID, process.id)
 
             val intent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 putExtras(bundle)
                 putExtra(CONTACT_ID, process.id)
             }
 
             val pendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.getActivity(this, process.id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             val notificationId = process.id.toInt()
             val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
@@ -120,7 +120,7 @@ class ContactService @Inject constructor() : Service(),
                 setSmallIcon(R.drawable.ic_group)
                 setContentIntent(pendingIntent)
                 priority = NotificationCompat.PRIORITY_DEFAULT
-                startForeground(notificationId, this.build())
+//                startForeground(notificationId, this.build())
             }
 
             NotificationManagerCompat.from(this).apply {
@@ -174,7 +174,6 @@ class ContactService @Inject constructor() : Service(),
 
     inner class ContactServiceBinder : Binder() {
         fun getService(): ContactService {
-            Log.d(TAG, "SERVICE: Binder")
             return this@ContactService
         }
     }

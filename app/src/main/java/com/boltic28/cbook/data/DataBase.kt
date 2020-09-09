@@ -160,6 +160,10 @@ class DataBase {
         selectedContactId = dbContact.id
     }
 
+    fun resetContact(){
+        setContact(dbContacts[0])
+    }
+
     fun setContact(id: Long){
         setContact(getById(id))
     }

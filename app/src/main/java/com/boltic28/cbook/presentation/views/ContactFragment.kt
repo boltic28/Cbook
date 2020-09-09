@@ -38,12 +38,11 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
         setButtons()
 
         model = ViewModelProviders.of(this).get(ContactFragmentModel::class.java)
-        contact = model.getContact()
-
-        bindData(contact)
     }
 
     override fun onResume() {
+        contact = model.getContact()
+        bindData(contact)
         checkForProcess()
         super.onResume()
     }
@@ -54,6 +53,8 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun bindData(contact: Contact) {
+        Log.d(TAG, "CONTACT: data is binding for ${contact.name}")
+        (activity as? Worker)?.setContactToolbar()
         contact_name.text = contact.name
         contact_number.text = contact.number
         contact_mail.text = contact.mail
@@ -106,7 +107,6 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun setProcessingData(process: Process) {
-        Log.d(TAG, "CONTACT: gotten new data: ${process.name} ${process.left()}")
         contact_button_work.text =
             resources.getString(R.string.contact_button_timer, process.left().toString())
         contact_progress.max = process.timer

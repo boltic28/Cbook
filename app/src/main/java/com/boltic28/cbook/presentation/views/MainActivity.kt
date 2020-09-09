@@ -15,8 +15,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.Process
-import com.boltic28.cbook.presentation.models.MainActivityModel
 import com.boltic28.cbook.presentation.interfaces.Worker
+import com.boltic28.cbook.presentation.models.MainActivityModel
 import com.boltic28.cbook.service.ContactService
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -31,40 +31,39 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
 
     private lateinit var model: MainActivityModel
 
-    var service: ContactService? = null
+    private var service: ContactService? = null
     private var isBound = false
     private var isTarget = false
     private var dualScreen = false
     private lateinit var serviceConnection: ServiceConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "CREATE MainActivity")
+        Log.d(TAG, "MAIN: CREATE MainActivity")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        model = ViewModelProviders.of(this).get(MainActivityModel::class.java)
-
-        tryToOpenContact(intent)
-
         serviceConnect()
         bind()
+
+        model = ViewModelProviders.of(this).get(MainActivityModel::class.java)
+        tryToOpenContact(intent)
 
         dualScreen = extraContainer != null
         checkLayoutOrientationAndSetLayoutManager()
     }
 
     override fun onNewIntent(intent: Intent?) {
+        Log.d(TAG, "MAIN: took new Intent ${intent.toString()}")
         super.onNewIntent(intent)
         tryToOpenContact(intent)
     }
 
-    private fun tryToOpenContact(intent: Intent?){
-        intent?.extras?.containsKey(CONTACT_ID)?.let{
+    private fun tryToOpenContact(intent: Intent?) {
+        intent?.extras?.containsKey(CONTACT_ID)?.let {
             if (it) {
                 model.dataBase.setContact(intent.extras!!.getLong(CONTACT_ID, 1))
                 Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne().name}")
                 isTarget = true
-                intent.removeExtra(CONTACT_ID)
             }
         }
     }
@@ -77,6 +76,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
                 service = binder.getService()
                 isBound = true
             }
+
             override fun onServiceDisconnected(componentName: ComponentName?) {
                 Log.d(TAG, "MAIN: service is disconnected")
                 service = null
@@ -97,8 +97,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
 
     override fun onDestroy() {
         Log.d(TAG, "MAIN: DESTROY MainActivity")
-        super.onDestroy()
         unbind()
+        super.onDestroy()
     }
 
     private fun openTwoFragments() {
@@ -115,7 +115,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
                 ContactFragment.getInstance(),
                 ContactFragment.FRAG_TAG
             )
-            .addToBackStack(null)
             .commit()
     }
 
@@ -133,18 +132,17 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
     }
 
     private fun openMainFragment() {
-        if (isTarget){
+        Log.d(TAG, "MAIN: Open List screen")
+        setMainToolbar()
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.container,
+                MainFragment.getInstance(),
+                MainFragment.FRAG_TAG
+            )
+            .commit()
+        if (isTarget) {
             openContactFragment()
-        }else {
-            Log.d(TAG, "MAIN: Open List screen")
-            setMainToolbar()
-            supportFragmentManager.beginTransaction()
-                .replace(
-                    R.id.container,
-                    MainFragment.getInstance(),
-                    MainFragment.FRAG_TAG
-                )
-                .commit()
         }
     }
 
@@ -156,7 +154,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
         }
     }
 
-    private fun setContactToolbar() {
+    override fun setContactToolbar() {
         supportActionBar?.apply {
             title = model.getOne().name
             setDisplayHomeAsUpEnabled(true)
@@ -165,9 +163,15 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
         isTarget = false
     }
 
+    override fun onBackPressed() {
+        if (dualScreen) finish()
+        super.onBackPressed()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             isTarget = false
+            supportFragmentManager.popBackStack()
             openMainFragment()
             setMainToolbar()
             return true
@@ -176,16 +180,16 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
     }
 
     private fun bind() {
-        Log.d(TAG, "MAIN: bind service")
         val intent = Intent(this, ContactService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun unbind() {
-        Log.d(TAG, "MAIN: unbind service")
         unbindService(serviceConnection)
         serviceConnection.onServiceDisconnected(this.componentName)
     }
+
+
 
     override fun openContactFragment() {
         if (dualScreen) openTwoFragments()
