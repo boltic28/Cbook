@@ -19,9 +19,11 @@ import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.DataBase
 import com.boltic28.cbook.data.Process
 import com.boltic28.cbook.presentation.MainActivity
+import com.boltic28.cbook.presentation.MainActivity.Companion.CONTACT_ID
+import com.boltic28.cbook.presentation.ProcessControl
 import javax.inject.Inject
 
-class ContactService @Inject constructor() : Service() {
+class ContactService @Inject constructor() : Service(), ProcessControl {
 
     companion object {
         const val TAG = "cBookt"
@@ -97,14 +99,8 @@ class ContactService @Inject constructor() : Service() {
     }
 
     //live
-    fun mGetProcessFor(contact: Contact): LiveData<Process?>? {
-        mProcesses.forEach { pr ->
-            if (pr.value?.id == contact.id) {
-                return pr
-            }
-        }
-        return null
-    }
+    fun mGetProcessFor(contact: Contact) = mProcesses.firstOrNull { it.value?.id == contact.id }
+
     //live
     fun deleteProcess(process: LiveData<Process?>){
         mProcesses.forEach { pr ->
@@ -165,12 +161,12 @@ class ContactService @Inject constructor() : Service() {
 
             val bundle = Bundle()
             Log.d(TAG, "SERVICE: ${process.name} id ${process.id} was putted in bundle ")
-            bundle.putLong("id", process.id)
+            bundle.putLong(CONTACT_ID, process.id)
 
             val intent = Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NO_HISTORY
                 putExtras(bundle)
-                putExtra("id", process.id)
+                putExtra(CONTACT_ID, process.id)
             }
 
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -210,6 +206,26 @@ class ContactService @Inject constructor() : Service() {
                 notify(notificationId, builder.build())
             }
         }).start()
+    }
+
+    override fun getLiveProcesses(): LiveData<List<java.lang.Process>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun startProcess(process: java.lang.Process) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateProcess(process: java.lang.Process) {
+        TODO("Not yet implemented")
+    }
+
+    override fun finishProcess(process: java.lang.Process) {
+        TODO("Not yet implemented")
+    }
+
+    override fun isExistId(id: Long) {
+        TODO("Not yet implemented")
     }
 
     inner class ContactServiceBinder : Binder() {

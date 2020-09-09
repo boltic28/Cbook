@@ -80,10 +80,10 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private fun lookingForProcess() {
         (activity as? Worker)?.mGetProcessFor(contact)?.observe(this,
-            Observer {process ->
+            Observer { process ->
                 if (process != null) {
                     setProcessingData(process)
-                }else{
+                } else {
                     turnOnButtonStartWork()
                 }
             })

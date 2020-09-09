@@ -23,6 +23,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
 
     companion object {
         const val TAG = "cBookt"
+        const val CONTACT_ID = "id"
     }
 
     private lateinit var model: MainActivityModel
@@ -40,19 +41,28 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
 
         model = ViewModelProviders.of(this).get(MainActivityModel::class.java)
 
-        intent.extras?.containsKey("id")?.let{
-            if (it) {
-                model.dataBase.setContact(intent.extras!!.getLong("id", 1))
-                Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne().name}")
-                isTarget = true
-            }
-        }
+        tryToOpenContact(intent)
 
         serviceConnect()
         bind()
 
         dualScreen = extraContainer != null
         checkLayoutOrientationAndSetLayoutManager()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        tryToOpenContact(intent)
+    }
+
+    private fun tryToOpenContact(intent: Intent?){
+        intent?.extras?.containsKey(CONTACT_ID)?.let{
+            if (it) {
+                model.dataBase.setContact(intent.extras!!.getLong(CONTACT_ID, 1))
+                Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne().name}")
+                isTarget = true
+            }
+        }
     }
 
     private fun serviceConnect() {
@@ -148,6 +158,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
+        isTarget = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
