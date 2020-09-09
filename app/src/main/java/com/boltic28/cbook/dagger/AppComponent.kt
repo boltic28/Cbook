@@ -1,6 +1,11 @@
 package com.boltic28.cbook.dagger
 
-import com.boltic28.cbook.presentation.*
+import com.boltic28.cbook.presentation.models.ContactFragmentModel
+import com.boltic28.cbook.presentation.models.MainActivityModel
+import com.boltic28.cbook.presentation.models.MainFragmentModel
+import com.boltic28.cbook.presentation.views.ContactFragment
+import com.boltic28.cbook.presentation.views.MainActivity
+import com.boltic28.cbook.presentation.views.MainFragment
 import com.boltic28.cbook.service.ContactService
 import dagger.Component
 import javax.inject.Singleton

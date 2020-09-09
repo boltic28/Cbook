@@ -1,4 +1,4 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.presentation.models
 
 import androidx.lifecycle.ViewModel
 import com.boltic28.cbook.dagger.App

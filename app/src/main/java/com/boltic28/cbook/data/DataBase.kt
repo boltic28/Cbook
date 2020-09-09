@@ -152,26 +152,22 @@ class DataBase {
     val contact: LiveData<Contact>
         get() = _mutableContact
 
-    private val _mutableContacts = MutableLiveData<List<Contact>>()
-    val contacts: LiveData<List<Contact>>
-        get() = _mutableContacts
-
     fun getSelectedContactId() = selectedContactId
 
     fun setContact(contact: Contact) {
+        Log.d(TAG, "DB: choose contact: ${contact.name}")
         dbContact = contact
         selectedContactId = dbContact.id
     }
 
     fun setContact(id: Long){
-        Log.d(TAG, "DB: create contact with id $id")
         setContact(getById(id))
     }
 
     private fun getById(id: Long): Contact{
         dbContacts.forEach {
             if (it.id == id){
-                Log.d(TAG, "DB: create contact with name ${it.name}")
+                Log.d(TAG, "DB: find contact with name ${it.name} by ID")
                 return it
             }
 

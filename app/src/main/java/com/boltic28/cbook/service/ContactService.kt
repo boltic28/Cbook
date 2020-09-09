@@ -12,26 +12,26 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
-import com.boltic28.cbook.data.DataBase
 import com.boltic28.cbook.data.Process
-import com.boltic28.cbook.presentation.MainActivity
-import com.boltic28.cbook.presentation.MainActivity.Companion.CONTACT_ID
-import com.boltic28.cbook.presentation.ProcessControl
+import com.boltic28.cbook.presentation.views.MainActivity
+import com.boltic28.cbook.presentation.views.MainActivity.Companion.CONTACT_ID
+import com.boltic28.cbook.presentation.interfaces.ProcessControl
 import javax.inject.Inject
 
-class ContactService @Inject constructor() : Service(), ProcessControl {
+class ContactService @Inject constructor() : Service(),
+    ProcessControl {
 
     companion object {
         const val TAG = "cBookt"
         const val CHANNEL_ID = "CB09"
         const val CHANNEL_NAME = "cBook"
         const val CHANNEL_DESC = "work with contacts"
-        var processes = mutableListOf<Process>()
-        var mProcesses = mutableListOf<MutableLiveData<Process?>>()
+
+        var mutableProcesses: MutableLiveData<List<Process>> = MutableLiveData()
+        var processesList: MutableList<Process> = mutableListOf()
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -71,7 +71,7 @@ class ContactService @Inject constructor() : Service(), ProcessControl {
                 try {
                     Thread.sleep(990)
                     process.now++
-// live                   refreshProcess(process)
+                    updateProcess(process)
                 } catch (e: Throwable) {
                     Log.d(TAG, "ERROR counting")
                 }
@@ -79,65 +79,6 @@ class ContactService @Inject constructor() : Service(), ProcessControl {
 
             finishProcess(process)
         }).start()
-    }
-
-    fun getProcessFor(contact: Contact): Process? {
-        processes.forEach { pr ->
-            if (pr.id == contact.id) {
-                Log.d(
-                    DataBase.TAG,
-                    "SERVICE: process for ${contact.name} is founded, left: ${pr.left()}s"
-                )
-                return pr
-            }
-        }
-        Log.d(
-            DataBase.TAG,
-            "SERVICE: process for ${contact.name} is not founded: size: ${processes.size}"
-        )
-        return null
-    }
-
-    //live
-    fun mGetProcessFor(contact: Contact) = mProcesses.firstOrNull { it.value?.id == contact.id }
-
-    //live
-    fun deleteProcess(process: LiveData<Process?>){
-        mProcesses.forEach { pr ->
-            if (pr == process) {
-                mProcesses.remove(pr)
-            }
-        }
-    }
-
-    private fun startProcess(process: Process) {
-        Log.d(DataBase.TAG, "SERVICE: start process: ${process.name}, size: ${processes.size}")
-        processes.add(process)
-        //live
-        val mProcess = MutableLiveData<Process>()
-        mProcess.postValue(process)
-    }
-        //live
-    private fun refreshProcess(process: Process) {
-        Log.d(DataBase.TAG, "SERVICE: start process: ${process.name}, size: ${processes.size}")
-
-        mProcesses.forEach { pr ->
-            if (pr.value?.id == process.id) {
-                pr.postValue(process)
-            }
-        }
-    }
-
-    private fun finishProcess(process: Process) {
-        Log.d(DataBase.TAG, "SERVICE: finish process: ${process.name}")
-        processes.remove(process)
-        //live
-        mProcesses.forEach { pr ->
-            if (pr.value == process) {
-                pr.postValue(null)
-            }
-        }
-
     }
 
     private fun createNotificationChannel() {
@@ -169,7 +110,8 @@ class ContactService @Inject constructor() : Service(), ProcessControl {
                 putExtra(CONTACT_ID, process.id)
             }
 
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             val notificationId = process.id.toInt()
             val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
@@ -208,24 +150,26 @@ class ContactService @Inject constructor() : Service(), ProcessControl {
         }).start()
     }
 
-    override fun getLiveProcesses(): LiveData<List<java.lang.Process>> {
-        TODO("Not yet implemented")
+    override fun getLiveProcesses() = mutableProcesses
+
+    override fun startProcess(process: Process) {
+        processesList.add(process)
+        updateLiveData()
     }
 
-    override fun startProcess(process: java.lang.Process) {
-        TODO("Not yet implemented")
+    override fun finishProcess(process: Process) {
+        processesList.remove(process)
+        updateLiveData()
     }
 
-    override fun updateProcess(process: java.lang.Process) {
-        TODO("Not yet implemented")
-    }
+    override fun isExist(contactId: Long) = processesList.firstOrNull { it.id == contactId } != null
 
-    override fun finishProcess(process: java.lang.Process) {
-        TODO("Not yet implemented")
-    }
+    override fun getProcessByContactIdIfExist(id: Long) = processesList.firstOrNull { it.id == id }
 
-    override fun isExistId(id: Long) {
-        TODO("Not yet implemented")
+    override fun updateLiveData() {
+        synchronized(processesList) {
+            mutableProcesses.postValue(processesList)
+        }
     }
 
     inner class ContactServiceBinder : Binder() {

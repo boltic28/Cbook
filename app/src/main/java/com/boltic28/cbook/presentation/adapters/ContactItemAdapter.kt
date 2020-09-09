@@ -1,4 +1,4 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.presentation.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

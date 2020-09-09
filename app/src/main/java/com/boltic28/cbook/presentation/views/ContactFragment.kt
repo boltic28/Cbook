@@ -1,4 +1,4 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.presentation.views
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.Process
+import com.boltic28.cbook.presentation.models.ContactFragmentModel
+import com.boltic28.cbook.presentation.interfaces.Worker
 import com.boltic28.cbook.util.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_contact.*
@@ -31,7 +33,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     private var countingThread: Thread? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "Contact fragment: CREATED")
+        Log.d(TAG, "CONTACT: CREATED")
         super.onViewCreated(view, savedInstanceState)
         setButtons()
 
@@ -65,22 +67,20 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun checkForProcess() {
-        Log.d(TAG, "Contact fragment: CheckProcess")
+        Log.d(TAG, "CONTACT: CheckProcess")
         val process = (activity as? Worker)?.getProcessFor(contact)
         if (process != null) {
             contact_button_work.isEnabled = false
             contact_progress.visibility = View.VISIBLE
 
-//            lookingForProcess()
-
-            countingThread = WorkThread(process)
-            countingThread?.start()
+            lookingForProcess()
         }
     }
 
     private fun lookingForProcess() {
-        (activity as? Worker)?.mGetProcessFor(contact)?.observe(this,
-            Observer { process ->
+        (activity as? Worker)?.mGetProcesses()?.observe(this,
+            Observer { processes ->
+                val process = processes.firstOrNull { it.id == contact.id }
                 if (process != null) {
                     setProcessingData(process)
                 } else {
@@ -103,32 +103,10 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
         Handler(context?.mainLooper!!).postDelayed({
             checkForProcess()
         }, 100)
-
-    }
-
-    inner class WorkThread(private var process: Process?) : Thread() {
-
-        override fun run() {
-            Log.d(TAG, "Contact fragment: ObserveProcess")
-            try {
-                while (process != null) {
-                    contact_progress.post { setProcessingData(process!!) }
-                    Log.d(TAG, "Contact fragment: counting left: ${process?.left()}")
-                    if (process?.left() == 0) {
-                        Log.d(TAG, "Contact fragment: work is finished")
-                        contact_progress.post { turnOnButtonStartWork() }
-                        break
-                    }
-                    sleep(990)
-                }
-            } catch (e: Throwable) {
-                Log.d(TAG, "Contact fragment: ------ERROR------ Stop the Thread: $e")
-            }
-        }
     }
 
     private fun setProcessingData(process: Process) {
-        Log.d(TAG, "Contact fragment: gotten new data: ${process.name} ${process.left()}")
+        Log.d(TAG, "CONTACT: gotten new data: ${process.name} ${process.left()}")
         contact_button_work.text =
             resources.getString(R.string.contact_button_timer, process.left().toString())
         contact_progress.max = process.timer
@@ -136,7 +114,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     }
 
     private fun turnOnButtonStartWork() {
-        Log.d(TAG, "Contact fragment: process is finished")
+        Log.d(TAG, "CONTACT: process is finished")
         contact_button_work.isEnabled = true
         contact_button_work.text = resources.getString(R.string.make_work)
         contact_progress.visibility = View.INVISIBLE

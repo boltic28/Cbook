@@ -1,4 +1,4 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.presentation.views
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
+import com.boltic28.cbook.presentation.adapters.ContactItemAdapter
+import com.boltic28.cbook.presentation.models.MainFragmentModel
+import com.boltic28.cbook.presentation.interfaces.Worker
 import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
 
@@ -25,7 +28,7 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
     lateinit var model: MainFragmentModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG,"CREATE MainFragment")
+        Log.d(TAG,"LIST: CREATE")
         super.onViewCreated(view, savedInstanceState)
 
         model = ViewModelProviders.of(this).get(MainFragmentModel::class.java)
@@ -33,7 +36,7 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
     }
 
     private fun setAdapter(list: List<Contact>) {
-        Log.d(MainActivity.TAG,"MainFragment refreshing the adapter")
+        Log.d(MainActivity.TAG,"LIST: refreshing the adapter")
 
         recycler_main.layoutManager =
             LinearLayoutManager(view?.context, LinearLayoutManager.VERTICAL, false)

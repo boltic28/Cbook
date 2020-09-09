@@ -1,4 +1,4 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.presentation.views
 
 import android.content.ComponentName
 import android.content.Context
@@ -15,11 +15,14 @@ import androidx.lifecycle.ViewModelProviders
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 import com.boltic28.cbook.data.Process
+import com.boltic28.cbook.presentation.models.MainActivityModel
+import com.boltic28.cbook.presentation.interfaces.Worker
 import com.boltic28.cbook.service.ContactService
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
+class MainActivity @Inject constructor() : AppCompatActivity(),
+    Worker {
 
     companion object {
         const val TAG = "cBookt"
@@ -61,6 +64,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
                 model.dataBase.setContact(intent.extras!!.getLong(CONTACT_ID, 1))
                 Log.d(TAG, "MAIN: contact from notification is ${model.dataBase.getOne().name}")
                 isTarget = true
+                intent.removeExtra(CONTACT_ID)
             }
         }
     }
@@ -68,13 +72,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
     private fun serviceConnect() {
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(componentName: ComponentName?, iBinder: IBinder?) {
-                Log.d(TAG, "service is connected")
+                Log.d(TAG, "MAIN: service is connected")
                 val binder = iBinder as ContactService.ContactServiceBinder
                 service = binder.getService()
                 isBound = true
             }
             override fun onServiceDisconnected(componentName: ComponentName?) {
-                Log.d(TAG, "service is disconnected")
+                Log.d(TAG, "MAIN: service is disconnected")
                 service = null
                 isBound = false
             }
@@ -92,13 +96,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "DESTROY MainActivity")
+        Log.d(TAG, "MAIN: DESTROY MainActivity")
         super.onDestroy()
         unbind()
     }
 
     private fun openTwoFragments() {
-        Log.d(TAG, "Open Dual screen")
+        Log.d(TAG, "MAIN: Open Dual screen")
         setMainToolbar()
         supportFragmentManager.beginTransaction()
             .replace(
@@ -116,7 +120,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
     }
 
     private fun openOneFragmentForContact() {
-        Log.d(TAG, "Open contact screen")
+        Log.d(TAG, "MAIN: Open contact screen")
         setContactToolbar()
         supportFragmentManager.beginTransaction()
             .replace(
@@ -132,7 +136,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
         if (isTarget){
             openContactFragment()
         }else {
-            Log.d(TAG, "Open List screen")
+            Log.d(TAG, "MAIN: Open List screen")
             setMainToolbar()
             supportFragmentManager.beginTransaction()
                 .replace(
@@ -172,13 +176,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
     }
 
     private fun bind() {
-        Log.d(TAG, "bind service")
+        Log.d(TAG, "MAIN: bind service")
         val intent = Intent(this, ContactService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun unbind() {
-        Log.d(TAG, "unbind service")
+        Log.d(TAG, "MAIN: unbind service")
         unbindService(serviceConnection)
         serviceConnection.onServiceDisconnected(this.componentName)
     }
@@ -193,14 +197,14 @@ class MainActivity @Inject constructor() : AppCompatActivity(), Worker {
     }
 
     override fun getProcessFor(contact: Contact): Process? {
-        return service?.getProcessFor(contact)
+        return service?.getProcessByContactIdIfExist(contact.id)
     }
 
-    override fun mGetProcessFor(contact: Contact): LiveData<Process?>? {
-        return service?.mGetProcessFor(contact)
+    override fun mGetProcesses(): LiveData<List<Process>>? {
+        return service?.getLiveProcesses()
     }
 
-    override fun deleteProcess(process: LiveData<Process?>) {
-        service?.deleteProcess(process)
+    override fun deleteProcess(process: Process) {
+        service?.finishProcess(process)
     }
 }

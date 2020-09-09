@@ -1,4 +1,4 @@
-package com.boltic28.cbook.presentation
+package com.boltic28.cbook.presentation.interfaces
 
 import androidx.lifecycle.LiveData
 import com.boltic28.cbook.data.Contact
@@ -10,6 +10,6 @@ interface Worker {
     fun getProcessFor(contact: Contact): Process?
     fun openContactFragment()
 
-    fun mGetProcessFor(contact: Contact): LiveData<Process?>?
-    fun deleteProcess(process: LiveData<Process?>)
+    fun mGetProcesses(): LiveData<List<Process>>?
+    fun deleteProcess(process: Process)
 }
