@@ -58,6 +58,28 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
         tryToOpenContact(intent)
     }
 
+    override fun onDestroy() {
+        Log.d(TAG, "MAIN: DESTROY MainActivity")
+        unbind()
+        super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        if (dualScreen) finish()
+        super.onBackPressed()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            isTarget = false
+            supportFragmentManager.popBackStack()
+            openMainFragment()
+            setMainToolbar()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun tryToOpenContact(intent: Intent?) {
         intent?.extras?.containsKey(CONTACT_ID)?.let {
             if (it) {
@@ -93,12 +115,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
                 openMainFragment()
             }
         }, 100)
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "MAIN: DESTROY MainActivity")
-        unbind()
-        super.onDestroy()
     }
 
     private fun openTwoFragments() {
@@ -154,6 +170,16 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
         }
     }
 
+    private fun bind() {
+        val intent = Intent(this, ContactService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unbind() {
+        unbindService(serviceConnection)
+        serviceConnection.onServiceDisconnected(this.componentName)
+    }
+
     override fun setContactToolbar() {
         if (dualScreen){
             setMainToolbar()
@@ -166,34 +192,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
         }
         isTarget = false
     }
-
-    override fun onBackPressed() {
-        if (dualScreen) finish()
-        super.onBackPressed()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            isTarget = false
-            supportFragmentManager.popBackStack()
-            openMainFragment()
-            setMainToolbar()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun bind() {
-        val intent = Intent(this, ContactService::class.java)
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-    }
-
-    private fun unbind() {
-        unbindService(serviceConnection)
-        serviceConnection.onServiceDisconnected(this.componentName)
-    }
-
-
 
     override fun openContactFragment() {
         if (dualScreen) openTwoFragments()

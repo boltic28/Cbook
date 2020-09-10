@@ -120,7 +120,7 @@ class ContactService @Inject constructor() : Service(),
                 setSmallIcon(R.drawable.ic_group)
                 setContentIntent(pendingIntent)
                 priority = NotificationCompat.PRIORITY_DEFAULT
-//                startForeground(notificationId, this.build())
+                startForeground(notificationId, this.build())
             }
 
             NotificationManagerCompat.from(this).apply {

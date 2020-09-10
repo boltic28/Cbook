@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
+import com.boltic28.cbook.presentation.adapters.ContactDiffUtil
 import com.boltic28.cbook.presentation.adapters.ContactItemAdapter
 import com.boltic28.cbook.presentation.models.MainFragmentModel
 import com.boltic28.cbook.presentation.interfaces.Worker
@@ -26,6 +28,7 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
     }
 
     lateinit var model: MainFragmentModel
+    lateinit var adapter: ContactItemAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG,"LIST: CREATE")
@@ -56,5 +59,16 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
                         (activity as? Worker)?.openContactFragment()
                     }
                 })
+
+        adapter = recycler_main.adapter as ContactItemAdapter
+    }
+
+    //method for refreshing list with DiffUtil
+    private fun refreshContacts(newList: List<Contact>){
+        val contactDiff = ContactDiffUtil(adapter.getData() , newList)
+        val diffResult = DiffUtil.calculateDiff(contactDiff)
+
+        adapter.setData(newList)
+        diffResult.dispatchUpdatesTo(adapter)
     }
 }

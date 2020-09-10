@@ -10,9 +10,15 @@ import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
 
 class ContactItemAdapter (private val selectedPosition: Long,
-                          private val contacts: List<Contact>,
+                          private var contacts: List<Contact>,
                           private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ContactItemAdapter.ContactHolder>() {
+
+    fun getData() = contacts
+
+    fun setData(newData: List<Contact>){
+        contacts = newData
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ContactHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false))
