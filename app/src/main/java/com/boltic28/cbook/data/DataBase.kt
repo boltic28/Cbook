@@ -10,7 +10,7 @@ class DataBase {
         const val TAG = "cBookt"
     }
 
-    private var dbContacts = listOf(
+    private var dbContacts = mutableListOf<Contact>(
         Contact(
             1L,
             "Bill Roberts",
@@ -162,6 +162,13 @@ class DataBase {
 
     fun resetContact(){
         setContact(dbContacts[0])
+    }
+
+    fun deleteContact(contact: Contact){
+        dbContacts.remove(contact)
+        if (selectedContactId == contact.id){
+            resetContact()
+        }
     }
 
     fun setContact(id: Long){

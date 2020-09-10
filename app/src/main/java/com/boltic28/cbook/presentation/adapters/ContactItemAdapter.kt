@@ -20,6 +20,15 @@ class ContactItemAdapter (private val selectedPosition: Long,
         contacts = newData
     }
 
+    fun removeAt(position: Int): Contact{
+        val list = contacts.toMutableList()
+        val contact = list[position]
+        list.removeAt(position)
+        contacts = list
+        notifyItemRemoved(position)
+        return contact
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ContactHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false))
 

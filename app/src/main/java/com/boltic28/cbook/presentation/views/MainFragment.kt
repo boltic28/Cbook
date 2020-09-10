@@ -6,9 +6,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.boltic28.cbook.R
 import com.boltic28.cbook.data.Contact
+import com.boltic28.cbook.presentation.adapters.ContactDeleter
 import com.boltic28.cbook.presentation.adapters.ContactDiffUtil
 import com.boltic28.cbook.presentation.adapters.ContactItemAdapter
 import com.boltic28.cbook.presentation.models.MainFragmentModel
@@ -61,6 +64,15 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
                 })
 
         adapter = recycler_main.adapter as ContactItemAdapter
+
+        val swipeHandler = object : ContactDeleter(context) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                model.deleteContact(adapter.removeAt(viewHolder.adapterPosition))
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recycler_main)
     }
 
     //method for refreshing list with DiffUtil

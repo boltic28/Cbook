@@ -25,6 +25,10 @@ class MainFragmentModel @Inject constructor(): ViewModel() {
         dataBase.setContact(contact)
     }
 
+    fun deleteContact(contact: Contact){
+        dataBase.deleteContact(contact)
+    }
+
     fun getSelectedId(): Long {
         Log.d(TAG, "MFM getSelectedId")
         return dataBase.getSelectedContactId()
