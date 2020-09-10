@@ -155,10 +155,14 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
     }
 
     override fun setContactToolbar() {
-        supportActionBar?.apply {
-            title = model.getOne().name
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
+        if (dualScreen){
+            setMainToolbar()
+        }else {
+            supportActionBar?.apply {
+                title = model.getOne().name
+                setDisplayHomeAsUpEnabled(true)
+                setDisplayShowHomeEnabled(true)
+            }
         }
         isTarget = false
     }

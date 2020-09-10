@@ -32,6 +32,10 @@ class MainFragment @Inject constructor(): Fragment(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
 
         model = ViewModelProviders.of(this).get(MainFragmentModel::class.java)
+    }
+
+    override fun onResume() {
+        super.onResume()
         setAdapter(model.getTestAll())
     }
 
