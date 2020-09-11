@@ -4,6 +4,8 @@
     <attr name="themePrimaryDark" format="reference"/>
     <attr name="themeAccent" format="reference"/>
     <attr name="themeTextColor" format="reference"/>
+    <attr name="themeHeaderTextColor" format="reference"/>
+    <attr name="themeInListTextColor" format="reference"/>
 
     <attr name="contactName" format="reference"/>
     <attr name="contactNumber" format="reference"/>

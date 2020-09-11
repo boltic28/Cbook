@@ -11,6 +11,8 @@
         <item name="themePrimaryDark">@color/dark_green</item>
         <item name="themeAccent">@color/light_green</item>
         <item name="themeTextColor">@color/black</item>
+        <item name="themeHeaderTextColor">@color/black</item>
+        <item name="themeInListTextColor">@color/black</item>
         <item name="contactName">@color/light_green</item>
         <item name="contactNumber">@color/light_gray</item>
         <item name="contactEmail">@color/green</item>
@@ -23,6 +25,8 @@
         <item name="themePrimaryDark">@color/dark_blue</item>
         <item name="themeAccent">@color/light_blue</item>
         <item name="themeTextColor">@color/light_gray</item>
+        <item name="themeHeaderTextColor">@color/white</item>
+        <item name="themeInListTextColor">@color/dark_blue</item>
         <item name="contactName">@color/light_blue</item>
         <item name="contactNumber">@color/light_gray</item>
         <item name="contactEmail">@color/blue</item>
@@ -31,15 +35,15 @@
     </style>
 
     <style name="HeaderMain" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">28sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
+        <item name="android:textColor">?themeHeaderTextColor</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">textStart</item>
         <item name="android:gravity">center</item>
     </style>
 
     <style name="Contact" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/contact_name_text_size</item>
         <item name="android:textColor">?contactName</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
@@ -47,61 +51,51 @@
     </style>
 
     <style name="Contact.Item">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/contact_name_in_list_text_size</item>
+        <item name="android:textColor">?themeInListTextColor</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAlignment">textStart</item>
-        <item name="android:paddingStart">@dimen/spaces_around_fragment</item>
+        <item name="android:paddingStart">@dimen/fragment_padding</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="Contact.Number">
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textColor">?contactNumber</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/contact_number_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Contact.Mail">
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_upper_view</item>
         <item name="android:textColor">?contactEmail</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/contact_mail_text_size</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Contact.Remark">
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_upper_view</item>
         <item name="android:textColor">?contactRemark</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/contact_remark_text_size</item>
         <item name="android:textStyle">italic</item>
     </style>
 
     <style name="Contact.Photo">
-        <item name="android:width">200dp</item>
-        <item name="android:height">200dp</item>
-        <item name="android:layout_marginTop">24dp</item>
-        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:width">@dimen/photo_size</item>
+        <item name="android:height">@dimen/photo_size</item>
+        <item name="android:layout_marginTop">@dimen/margin_upper_under_photo</item>
+        <item name="android:layout_marginBottom">@dimen/margin_upper_under_photo</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
 
     <style name="Contact.Button" parent="TextAppearance.AppCompat.Button">
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="Notification.Timer" parent="TextAppearance.Compat.Notification.Time">
-
-    </style>
-
-    <style name="Notification.Progress" parent="Widget.AppCompat.SeekBar">
-        <item name="android:layout_marginStart">32dp</item>
-        <item name="android:layout_marginEnd">32dp</item>
-        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_upper_view</item>
+        <item name="android:textSize">@dimen/contact_button_text_size</item>
+        <item name="android:textColor">?themeInListTextColor</item>
     </style>
 
     <style name="Notification.Contact" parent="TextAppearance.Compat.Notification.Info">
-        <item name="android:layout_marginStart">32dp</item>
+        <item name="android:layout_marginStart">@dimen/notification_margin_left_right</item>
     </style>
 </resources>

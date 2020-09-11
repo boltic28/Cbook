@@ -8,7 +8,7 @@
         android:id="@+id/contact_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="@dimen/spaces_around_fragment"
+        android:paddingTop="@dimen/fragment_padding"
         app:layout_constrainedHeight="true"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -74,7 +74,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/header_high" />
+                android:layout_height="@dimen/space_under_contact_info" />
         </LinearLayout>
     </ScrollView>
 

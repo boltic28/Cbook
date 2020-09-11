@@ -93,6 +93,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     private fun setButtons() {
         contact_button_work.setOnClickListener {
             contact_button_work.isEnabled = false
+            contact_button_work.isActivated = false
             contact_progress.visibility = View.VISIBLE
 
             startWorking()
@@ -116,6 +117,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
     private fun turnOnButtonStartWork() {
         Log.d(TAG, "CONTACT: process is finished")
         contact_button_work.isEnabled = true
+        contact_button_work.isActivated = true
         contact_button_work.text = resources.getString(R.string.make_work)
         contact_progress.visibility = View.INVISIBLE
     }

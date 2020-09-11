@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="header_high">80dp</dimen>
-    <dimen name="spaces_around_fragment">16dp</dimen>
+    <dimen name="header_text_size">28sp</dimen>
+    <dimen name="contact_name_text_size">24sp</dimen>
+    <dimen name="contact_name_in_list_text_size">20sp</dimen>
+    <dimen name="contact_number_text_size">20sp</dimen>
+    <dimen name="contact_remark_text_size">16sp</dimen>
+    <dimen name="contact_mail_text_size">20sp</dimen>
+    <dimen name="contact_button_text_size">20sp</dimen>
+
+    <dimen name="space_under_contact_info">60sp</dimen>
+
+    <dimen name="notification_margin_left_right">32sp</dimen>
+    <dimen name="notification_margin_top">24sp</dimen>
+
+    <dimen name="fragment_padding">16dp</dimen>
+    <dimen name="margin_upper_view">16dp</dimen>
+    <dimen name="margin_upper_under_photo">20dp</dimen>
+
     <dimen name="item_high">60dp</dimen>
+
+    <dimen name="photo_size">200dp</dimen>
 </resources>
