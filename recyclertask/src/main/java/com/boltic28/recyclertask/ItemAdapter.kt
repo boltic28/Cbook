@@ -16,7 +16,9 @@ class ItemAdapter(private var items: List<String>,
 
     fun getAtIndex(position: Int) = items[position]
 
-    fun getData() = items
+    fun reload(){
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(

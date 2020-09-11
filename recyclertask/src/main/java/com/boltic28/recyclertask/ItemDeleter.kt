@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class ItemDeleter(context: Context?):
-    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
     private val deleteIcon = ContextCompat.getDrawable(context!!, R.drawable.ic_delete)!!
     private val intrinsicWidth = deleteIcon.intrinsicWidth
@@ -59,7 +59,7 @@ abstract class ItemDeleter(context: Context?):
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
-    fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
+    private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
         c?.drawRect(left, top, right, bottom, clearPaint)
     }
 }

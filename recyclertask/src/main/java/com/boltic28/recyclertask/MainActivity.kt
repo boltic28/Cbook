@@ -1,7 +1,6 @@
 package com.boltic28.recyclertask
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
@@ -14,13 +13,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), ItemService {
 
     private var data = mutableListOf(
-        "User 1","User 2","User 3","User 4","User 5","User 6","User 7","User 8"
+        "User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7", "User 8"
     )
     private var counter = 9
-
-    private lateinit var adapter : ItemAdapter
-
-    private lateinit var deleter: ItemDeleter
+    private lateinit var adapter: ItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +28,16 @@ class MainActivity : AppCompatActivity(), ItemService {
         recycler.adapter = ItemAdapter(data, object :
             ItemAdapter.OnItemClickListener {
             override fun onClick(item: String) {
-                showDialog(item)
+                showDialog(item, false)
             }
         })
         setFAB()
 
         adapter = recycler.adapter as ItemAdapter
 
-        deleter = object : ItemDeleter(this) {
+        val deleter = object : ItemDeleter(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                showDialog(adapter.getAtIndex(viewHolder.adapterPosition))
+                showDialog(adapter.getAtIndex(viewHolder.adapterPosition), true)
             }
         }
 
@@ -49,13 +45,13 @@ class MainActivity : AppCompatActivity(), ItemService {
         itemTouchHelper.attachToRecyclerView(recycler)
     }
 
-    private fun setFAB(){
-        button_add.setOnClickListener{
+    private fun setFAB() {
+        button_add.setOnClickListener {
             addItem("User ${counter++}")
         }
     }
 
-    private fun refreshData(list: List<String>){
+    private fun refreshData(list: List<String>) {
         val itemDiff = DiffUtilItem(data, list)
         val result = DiffUtil.calculateDiff(itemDiff)
 
@@ -64,15 +60,17 @@ class MainActivity : AppCompatActivity(), ItemService {
         result.dispatchUpdatesTo(adapter)
     }
 
-    private fun showDialog(item: String) {
-        DeleteAlertDialog(item).show(supportFragmentManager, "delete")
+    private fun showDialog(item: String, flagUndo: Boolean) {
+        DeleteAlertDialog(item, flagUndo).show(supportFragmentManager, "undo")
     }
 
-    private fun showMessage(item: String){
-        Snackbar.make( findViewById(android.R.id.content)
-            , "$item deleted", Snackbar.LENGTH_LONG).apply {
+    private fun showMessage(item: String, ind: Int) {
+        Snackbar.make(
+            findViewById(android.R.id.content)
+            , "$item deleted", Snackbar.LENGTH_LONG
+        ).apply {
             setAction(R.string.snack_alert_undo) {
-                undoRemove(item)
+                undoRemove(item, ind)
             }
             show()
         }
@@ -84,11 +82,15 @@ class MainActivity : AppCompatActivity(), ItemService {
         newList.remove(item)
         refreshData(newList)
         Toast.makeText(this, "$item deleted", Toast.LENGTH_SHORT).show()
-        showMessage(item)
     }
 
-    override fun undoRemove(item: String) {
-        addItem(item)
+    override fun removeItemUndo(item: String) {
+        val newList = mutableListOf<String>()
+        newList.addAll(data)
+        val ind = newList.indexOf(item)
+        newList.remove(item)
+        refreshData(newList)
+        showMessage(item, ind)
     }
 
     override fun addItem(item: String) {
@@ -98,11 +100,19 @@ class MainActivity : AppCompatActivity(), ItemService {
         refreshData(newList)
     }
 
-    override fun shuffle() {
-//        val newList = mutableListOf<String>()
-//        newList.addAll(data)
-//        newList.shuffle()
-//        refreshData(newList)
+    override fun undoRemove(item: String, index: Int) {
+        addItem(item, index)
+    }
+
+    override fun addItem(item: String, index: Int) {
+        val newList = mutableListOf<String>()
+        newList.addAll(data)
+        newList.add(index, item)
+        refreshData(newList)
+    }
+
+    override fun cancel() {
+        adapter.reload()
     }
 
     override fun setNewData(data: List<String>) {
