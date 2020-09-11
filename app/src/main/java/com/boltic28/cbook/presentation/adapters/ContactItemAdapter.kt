@@ -43,6 +43,7 @@ class ContactItemAdapter (private val selectedPosition: Long,
         @SuppressLint("ResourceAsColor")
         fun bind(contact: Contact){
             name.text = contact.name
+
             itemView.isSelected = contact.id == selectedPosition
 
             itemView.setOnClickListener {

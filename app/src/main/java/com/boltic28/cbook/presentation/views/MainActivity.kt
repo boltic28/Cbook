@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -40,6 +41,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "MAIN: CREATE MainActivity")
         super.onCreate(savedInstanceState)
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setTheme(R.style.AppTheme_Blue)
+        }else{
+            setTheme(R.style.AppTheme_Lime)
+        }
+
         setContentView(R.layout.activity_main)
 
         serviceConnect()

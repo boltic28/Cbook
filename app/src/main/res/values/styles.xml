@@ -1,10 +1,33 @@
 <resources>
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">?themePrimary</item>
+        <item name="colorPrimaryDark">?themePrimaryDark</item>
+        <item name="colorAccent">?themeAccent</item>
+        <item name="android:textColorPrimary">?themeTextColor</item>
+    </style>
+
+    <style name="AppTheme.Lime">
+        <item name="themePrimary">@color/green</item>
+        <item name="themePrimaryDark">@color/dark_green</item>
+        <item name="themeAccent">@color/light_green</item>
+        <item name="themeTextColor">@color/black</item>
+        <item name="contactName">@color/light_green</item>
+        <item name="contactNumber">@color/light_gray</item>
+        <item name="contactEmail">@color/green</item>
+        <item name="contactRemark">@color/green</item>
+        <item name="contactSelected">@color/light_green</item>
+    </style>
+
+    <style name="AppTheme.Blue">
+        <item name="themePrimary">@color/blue</item>
+        <item name="themePrimaryDark">@color/dark_blue</item>
+        <item name="themeAccent">@color/light_blue</item>
+        <item name="themeTextColor">@color/light_gray</item>
+        <item name="contactName">@color/light_blue</item>
+        <item name="contactNumber">@color/light_gray</item>
+        <item name="contactEmail">@color/blue</item>
+        <item name="contactRemark">@color/blue</item>
+        <item name="contactSelected">@color/light_blue</item>
     </style>
 
     <style name="HeaderMain" parent="TextAppearance.AppCompat">
@@ -17,7 +40,7 @@
 
     <style name="Contact" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/darkGray</item>
+        <item name="android:textColor">?contactName</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
         <item name="android:gravity">center</item>
@@ -34,18 +57,21 @@
 
     <style name="Contact.Number">
         <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">?contactNumber</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Contact.Mail">
         <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">?contactEmail</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Contact.Remark">
         <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">?contactRemark</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">italic</item>
     </style>
@@ -77,6 +103,5 @@
 
     <style name="Notification.Contact" parent="TextAppearance.Compat.Notification.Info">
         <item name="android:layout_marginStart">32dp</item>
-
     </style>
 </resources>

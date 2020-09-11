@@ -165,6 +165,7 @@ class DataBase {
     }
 
     fun deleteContact(contact: Contact){
+        Log.d(TAG, "DB: delete contact: ${contact.name}")
         dbContacts.remove(contact)
         if (selectedContactId == contact.id){
             resetContact()

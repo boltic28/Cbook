@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="themePrimary" format="reference"/>
+    <attr name="themePrimaryDark" format="reference"/>
+    <attr name="themeAccent" format="reference"/>
+    <attr name="themeTextColor" format="reference"/>
+
+    <attr name="contactName" format="reference"/>
+    <attr name="contactNumber" format="reference"/>
+    <attr name="contactEmail" format="reference"/>
+    <attr name="contactRemark" format="reference"/>
+    <attr name="contactSelected" format="reference"/>
+
+</resources>
