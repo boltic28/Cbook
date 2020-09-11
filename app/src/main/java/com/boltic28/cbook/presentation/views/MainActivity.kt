@@ -42,11 +42,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
         Log.d(TAG, "MAIN: CREATE MainActivity")
         super.onCreate(savedInstanceState)
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setTheme(R.style.AppTheme_Blue)
-        }else{
-            setTheme(R.style.AppTheme_Lime)
-        }
+        adjustTheme()
 
         setContentView(R.layout.activity_main)
 
@@ -186,6 +182,14 @@ class MainActivity @Inject constructor() : AppCompatActivity(),
     private fun unbind() {
         unbindService(serviceConnection)
         serviceConnection.onServiceDisconnected(this.componentName)
+    }
+
+    private fun adjustTheme(){
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setTheme(R.style.AppTheme_Blue)
+        }else{
+            setTheme(R.style.AppTheme_Lime)
+        }
     }
 
     override fun setContactToolbar() {

@@ -1,2 +1,3 @@
+include ':recyclertask'
 include ':app'
 rootProject.name = "CBook"

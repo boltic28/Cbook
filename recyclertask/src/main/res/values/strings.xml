@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RecyclerTask</string>
+    <string name="dialog_alert">Do you want to delete item</string>
+    <string name="dialog_alert_delete">Delete</string>
+    <string name="dialog_alert_cancel">Cancel</string>
+    <string name="snack_alert_undo">UNDO</string>
+</resources>
