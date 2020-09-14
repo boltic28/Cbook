@@ -1,8 +1,9 @@
-package com.boltic28.recyclertask
+package com.boltic28.recyclertask.recycler
 
 import androidx.recyclerview.widget.DiffUtil
+import com.boltic28.recyclertask.classes.BaseInstance
 
-class DiffUtilItem(private val oldList: List<String>, private val newList: List<String>): DiffUtil.Callback() {
+class DiffUtilItem(private val oldList: List<BaseInstance>, private val newList: List<BaseInstance>): DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
         oldList[oldItemPosition] == newList[newItemPosition]

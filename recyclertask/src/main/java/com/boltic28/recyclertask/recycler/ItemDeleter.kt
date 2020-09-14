@@ -1,4 +1,4 @@
-package com.boltic28.recyclertask
+package com.boltic28.recyclertask.recycler
 
 import android.content.Context
 import android.graphics.*
@@ -6,11 +6,14 @@ import android.graphics.drawable.ColorDrawable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.boltic28.recyclertask.R
 
 abstract class ItemDeleter(context: Context?):
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-    private val deleteIcon = ContextCompat.getDrawable(context!!, R.drawable.ic_delete)!!
+    private val deleteIcon = ContextCompat.getDrawable(context!!,
+        R.drawable.ic_delete
+    )!!
     private val intrinsicWidth = deleteIcon.intrinsicWidth
     private val intrinsicHeight = deleteIcon.intrinsicHeight
     private val background = ColorDrawable()

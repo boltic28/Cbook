@@ -1,11 +1,14 @@
-package com.boltic28.recyclertask
+package com.boltic28.recyclertask.view
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.boltic28.recyclertask.R
+import com.boltic28.recyclertask.classes.BaseInstance
+import com.boltic28.recyclertask.service.ItemService
 
-class DeleteAlertDialog(private val item: String, private val flagUndo: Boolean) : DialogFragment() {
+class DeleteAlertDialog(private val item: BaseInstance, private val flagUndo: Boolean) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity).apply {
