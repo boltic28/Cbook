@@ -11,5 +11,7 @@ interface ItemService {
     fun addItem(item: String)
     fun addItem(item: String, index: Int)
 
+    fun shuffleItems()
+
     fun cancel()
 }

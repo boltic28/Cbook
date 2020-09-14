@@ -109,7 +109,7 @@ class ContactFragment @Inject constructor() : Fragment(R.layout.fragment_contact
 
     private fun setProcessingData(process: Process) {
         contact_button_work.text =
-            resources.getString(R.string.contact_button_timer, process.left().toString())
+            resources.getString(R.string.contact_button_timer, process.left.toString())
         contact_progress.max = process.timer
         contact_progress.progress = process.now
     }

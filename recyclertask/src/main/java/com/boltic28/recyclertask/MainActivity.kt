@@ -1,6 +1,8 @@
 package com.boltic28.recyclertask
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
@@ -13,8 +15,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), ItemService {
 
     private var data = mutableListOf(
-        "User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7", "User 8"
+        "User 1", "User 2", "User 3", "User 4","res1", "res2",
+        "res5", "User 5", "User 6","res4", "User 7", "User 8", "res3"
     )
+
     private var counter = 9
     private lateinit var adapter: ItemAdapter
 
@@ -117,5 +121,24 @@ class MainActivity : AppCompatActivity(), ItemService {
 
     override fun setNewData(data: List<String>) {
         this.data = data as MutableList<String>
+    }
+
+    override fun shuffleItems() {
+        val newList = mutableListOf<String>()
+        newList.addAll(data)
+        newList.shuffle()
+        refreshData(newList)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return  true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.shuffle -> {shuffleItems()}
+        }
+        return true
     }
 }

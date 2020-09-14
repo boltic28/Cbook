@@ -11,4 +11,8 @@
         style="@style/Item"
         tools:text="Item Name" />
 
+    <ImageView
+        android:id="@+id/item_picture"
+        style="@style/ItemPicture" />
+
 </FrameLayout>

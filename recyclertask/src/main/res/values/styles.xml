@@ -9,15 +9,22 @@
 
     <style name="Item" parent="TextAppearance.AppCompat">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:paddingStart">@dimen/item_padding_left_right</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">@dimen/item_text_size</item>
-        <item name="android:layout_marginTop">@dimen/item_margin_top</item>
     </style>
 
     <style name="ItemView" parent="Widget.AppCompat.ListView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/item_height</item>
-        <item name="android:paddingStart">@dimen/item_padding_left_right</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ItemPicture">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">centerCrop</item>
+<!--        <item name="android:layout_marginBottom">@dimen/item_picture_margin</item>-->
     </style>
 
     <style name="ItemViewDelete" parent="Widget.AppCompat.ImageButton">

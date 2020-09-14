@@ -1,28 +1,46 @@
 package com.boltic28.cbook.data
 
-import java.io.Serializable
+import android.os.Parcel
+import android.os.Parcelable
 
-class Contact(): Serializable {
-    constructor(
-        id: Long,
-        name: String,
-        number: String,
-        mail: String,
-        remark: String,
-        photo: String
-    ): this(){
-        this.id = id
-        this.name = name
-        this.number = number
-        this.mail = mail
-        this.remark = remark
-        this.photo = photo
+data class Contact(
+    var id: Long = 0,
+    var name: String = "contact",
+    var number: String = "+375 44 1234567",
+    var mail: String = "contact@mail.com",
+    var remark: String = "nothing",
+    var photo: String = ""
+
+): Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readLong(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString()
+    )
+
+    override fun writeToParcel(parcel: Parcel, p1: Int) {
+        parcel.writeLong(id)
+        parcel.writeString(name)
+        parcel.writeString(number)
+        parcel.writeString(mail)
+        parcel.writeString(remark)
+        parcel.writeString(photo)
     }
 
-    var id: Long = 0
-    var name: String = "contact"
-    var number: String = "+375 44 1234567"
-    var mail: String = "contact@mail.com"
-    var remark: String = "nothing"
-    var photo: String = ""
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Contact> {
+        override fun createFromParcel(parcel: Parcel): Contact {
+            return Contact(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Contact?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

@@ -116,7 +116,7 @@ class ContactService @Inject constructor() : Service(),
             val notificationId = process.id.toInt()
             val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
                 setContentTitle(process.name)
-                setContentText(resources.getString(R.string.notification_text, process.left()))
+                setContentText(resources.getString(R.string.notification_text, process.left))
                 setSmallIcon(R.drawable.ic_group)
                 setContentIntent(pendingIntent)
                 priority = NotificationCompat.PRIORITY_DEFAULT
@@ -134,7 +134,7 @@ class ContactService @Inject constructor() : Service(),
                             .setContentText(
                                 resources.getString(
                                     R.string.notification_text,
-                                    process.left()
+                                    process.left
                                 )
                             )
                         notify(notificationId, builder.build())
