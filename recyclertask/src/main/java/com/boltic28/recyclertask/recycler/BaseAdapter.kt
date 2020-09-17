@@ -1,13 +1,10 @@
 package com.boltic28.recyclertask.recycler
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.boltic28.recyclertask.R
 import com.boltic28.recyclertask.classes.BaseInstance
 
-class BaseAdapter(var items: List<BaseInstance>,
-                  private var listener: OnItemClickListener) :
+class BaseAdapter(var items: List<BaseInstance>, private var listener: OnItemClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun setData(list: List<BaseInstance>) {
@@ -16,43 +13,17 @@ class BaseAdapter(var items: List<BaseInstance>,
 
     fun getAtIndex(position: Int) = items[position]
 
-    fun reload() {
-        notifyDataSetChanged()
-    }
+    fun reload() = notifyDataSetChanged()
 
     override fun getItemViewType(position: Int) = items[position].type
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType) {
-            101 -> {
-                return TextViewHolder(
-                    LayoutInflater.from(parent.context)
-                        .inflate(
-                            R.layout.text_view,
-                            parent,
-                            false
-                        )
-                )
-            }
-            102 -> {
-                return PictureViewHolder(
-                    LayoutInflater.from(parent.context)
-                        .inflate(
-                            R.layout.image_view,
-                            parent,
-                            false
-                        )
-                )
-            }
+
+        return if (viewType == PictureViewHolder.ID){
+            PictureViewHolder.create(parent)
+        }else{
+            TextViewHolder.create(parent)
         }
-        return TextViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(
-                    R.layout.item_view,
-                    parent,
-                    false
-                )
-        )
     }
 
     override fun getItemCount() = items.size
@@ -60,12 +31,8 @@ class BaseAdapter(var items: List<BaseInstance>,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder.itemViewType) {
-            101 -> {
-                (holder as TextViewHolder).bind(items[position], listener)
-            }
-            102 -> {
-                (holder as PictureViewHolder).bind(items[position], listener)
-            }
+            TextViewHolder.ID -> (holder as TextViewHolder).bind(items[position], listener)
+            PictureViewHolder.ID -> (holder as PictureViewHolder).bind(items[position], listener)
         }
     }
 

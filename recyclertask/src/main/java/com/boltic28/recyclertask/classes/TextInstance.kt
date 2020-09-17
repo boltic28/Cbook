@@ -1,4 +1,5 @@
 package com.boltic28.recyclertask.classes
 
-class TextInstance(id: Long, val content: String): BaseInstance(id, 101) {
-}
+import com.boltic28.recyclertask.recycler.TextViewHolder
+
+class TextInstance(id: Long, val content: String): BaseInstance(id, TextViewHolder.ID)

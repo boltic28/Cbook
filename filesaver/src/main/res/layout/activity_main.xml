@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/text_for_writing"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:inputType="textMultiLine"
+        android:gravity="start"
+        android:text="@string/text_for_saving"
+        android:layout_margin="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/create_ext_file"
+        style="@style/Button.Create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/create_int_file"
+        app:layout_constraintTop_toBottomOf="@+id/text_for_writing" />
+
+    <Button
+        android:id="@+id/delete_ext_file"
+        style="@style/Button.Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/delete_int_file"
+        app:layout_constraintTop_toBottomOf="@+id/create_ext_file" />
+
+    <Button
+        android:id="@+id/create_int_file"
+        style="@style/Button.Create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/create_ext_file"
+        app:layout_constraintTop_toBottomOf="@+id/text_for_writing" />
+
+    <Button
+        android:id="@+id/delete_int_file"
+        style="@style/Button.Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/delete_ext_file"
+        app:layout_constraintTop_toBottomOf="@+id/create_int_file" />
+
+    <Button
+        android:id="@+id/read_from_int"
+        style="@style/Button.Read"
+        android:text="@string/read"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/delete_ext_file"
+        app:layout_constraintTop_toBottomOf="@+id/delete_int_file" />
+
+    <Button
+        android:id="@+id/read_from_ext"
+        style="@style/Button.Read"
+        android:text="@string/read"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/delete_int_file"
+        app:layout_constraintTop_toBottomOf="@+id/delete_ext_file" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/external"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/delete_int_file"
+        app:layout_constraintTop_toBottomOf="@+id/read_from_ext" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/internal"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/delete_ext_file"
+        app:layout_constraintTop_toBottomOf="@+id/read_from_int" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
