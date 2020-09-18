@@ -2,21 +2,23 @@ package com.boltic28.networkretroroom.room.human
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.boltic28.networkretroroom.room.convertor.DateConverter
+import com.boltic28.networkretroroom.room.convertor.HumanTypeConverter
 import com.boltic28.networkretroroom.room.enum.HumanType
 import java.time.LocalDate
 
 @Entity(tableName = "human")
-data class HumanEntity (
+data class Human (
 
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val type: HumanType = HumanType.MAN,
-    val title: String = "ms",
-    val name: String = "nobody",
-    val lastName: String = "who",
-    val age: Int = 0,
-    val date: LocalDate = LocalDate.now(),
-    val photo: String = "",
-    val phone: String = "123456",
-    val mail: String = "mail@mail.com"
+    var id: Long = 0,
+    var title: String,
+    var name: String,
+    var lastName: String,
+    var age: Int,
+    var gender: String,
+    var photo: String,
+    var phone: String,
+    var mail: String
 )

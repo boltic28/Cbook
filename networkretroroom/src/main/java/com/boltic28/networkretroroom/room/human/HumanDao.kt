@@ -1,26 +1,25 @@
 package com.boltic28.networkretroroom.room.human
 
 import androidx.room.*
-import io.reactivex.Single
 
 @Dao
 interface HumanDao {
 
     @Insert
-    fun insert(human: HumanEntity): Single<Long>
+    fun insert(human: Human): Long
 
     @Update
-    fun update(human: HumanEntity): Single<Int>
+    fun update(human: Human): Int
 
     @Delete
-    fun delete(human: HumanEntity): Single<Int>
+    fun delete(human: Human): Int
 
     @Query("SELECT * FROM human ORDER BY name ASC")
-    fun getAll(): Single<List<HumanEntity>>
+    fun getAll(): List<Human>
 
-    @Query("SELECT * FROM human WHERE type = :gender ORDER BY lastName ASC")
-    fun getAllBySex(gender: Int): Single<List<HumanEntity>>
+    @Query("SELECT * FROM human WHERE gender = :gender ORDER BY lastName ASC")
+    fun getAllByGender(gender: Int): List<Human>
 
     @Query("SELECT * FROM human WHERE id = :id")
-    fun getById(id: Long): Single<HumanEntity>
+    fun getById(id: Long): Human
 }

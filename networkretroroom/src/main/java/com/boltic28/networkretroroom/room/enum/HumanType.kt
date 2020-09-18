@@ -1,11 +1,11 @@
 package com.boltic28.networkretroroom.room.enum
 
-enum class HumanType(var value: Int) {
-    MAN(1),
-    WOMAN(0);
+enum class HumanType(var value: String) {
+    MAN("male"),
+    WOMAN("female");
 
     companion object{
         private val map = values().associateBy(HumanType::value)
-        fun fromInt(type: Int) = map[type]
+        fun fromString(type: String) = map[type]
     }
 }
