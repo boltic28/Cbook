@@ -2,11 +2,23 @@
     <string name="app_name">FileSaver</string>
     <string name="ext_file">EXT FILE</string>
     <string name="int_file">INT FILE</string>
-    <string name="text_for_saving">Производство первого Golf’а (внутреннее название Typ 17) началось в 1974 году. В США и Канаде он выпускался под торговой маркой «Volkswagen Rabbit», а в Латинской Америке — «Volkswagen Caribe». Первый дизайн Golf I был разработан итальянским автомобильным дизайнером Джорджетто Джуджаро. Кроме стандартного кузова хетчбэк, Golf I также выпускался в виде кабриолета Golf Cabriolet (Typ 155). Выпуск кабриолетов Golf I растянулся на период с 1980 по 1993 год, вплоть до появления Golf III. Это было связано с тем, что в период, когда производство Golf I уже было остановлено и сменено на Golf II, кабриолет версии Golf II так и не появился. GTI версия Golf I появилась в 1976 году, и международный журнал «Sports Car International» присвоил ей 3-е место среди лучших автомобилей 80-х[источник не указан 1327 дней]. Осенью 2009 года Volkswagen прекратил серийный выпуск первого поколения Golf, который осуществлялся в ЮАР. С семидесятых годов этот автомобиль претерпел множество изменений и улучшений практически во всех системах автомобиля, включая салон. Кроме того, в ЮАР этот автомобиль назывался «CitiGolf» и пользовался большим спросом, в основном благодаря доступной цене. За время выпуска первой модели в Германии было произведено около 5 625 000 автомобилей, в том числе порядка 450 000 в версии GTI</string>
+    <string name="text_for_saving">Производство первого Golf’а (внутреннее название Typ 17) началось в 1974 году. В США и Канаде он выпускался под торговой маркой «Volkswagen Rabbit», а в Латинской Америке — «Volkswagen Caribe». Первый дизайн Golf I был разработан итальянским автомобильным дизайнером Джорджетто Джуджаро. Кроме стандартного кузова хетчбэк, Golf I также выпускался в виде кабриолета Golf Cabriolet (Typ 155). За время выпуска первой модели в Германии было произведено около 5 625 000 автомобилей, в том числе порядка 450 000 в версии GTI</string>
     <string name="save">save</string>
     <string name="delete">delete</string>
     <string name="read">read</string>
     <string name="internal">INTERNAL</string>
     <string name="external">EXTERNAL</string>
+
+
+    <string name="file_not_found">File not found</string>
+    <string name="file_not_written">File not written</string>
+    <string name="file_wrote_ext">File wrote in EXTERNAL storage</string>
+    <string name="file_wrote_int">File wrote in INTERNAL storage</string>
+    <string name="file_read_ext">File read from EXT storage</string>
+    <string name="file_read_int">File read from INT storage</string>
+    <string name="file_deleted_ext">File deleted from EXT storage</string>
+    <string name="file_deleted_int">File deleted from INT storage</string>
+
+
 
 </resources>

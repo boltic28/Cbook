@@ -8,14 +8,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.boltic28.filesaver.Directories.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.file.Files
 
 class MainActivity : AppCompatActivity() {
 
-    private val permissionCode = 7777
+    companion object {
+        private const val WRITE_EXT_STORAGE_PERMISSION_REQUEST_CODE = 7777
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,73 +74,83 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 )
-            ActivityCompat.requestPermissions(this, permissionArray, permissionCode)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionArray,
+                WRITE_EXT_STORAGE_PERMISSION_REQUEST_CODE
+            )
         }
     }
 
     private fun writeFileToExternalStorage(string: String) {
-        testDirectory(Directories.EXTERNAL)
-        val file = File(Directories.FILE_EXT.value)
-        file.createNewFile()
-        file.writeText(string)
-        showMessage("File wrote in EXTERNAL storage")
+        testExternalDirectory()
+        try {
+            val file = File(getExternalFilesDir(EXTERNAL_PATH.value), FILE_EXT.value)
+            file.createNewFile()
+            file.writeText(string)
+            showMessage(resources.getString(R.string.file_wrote_ext))
+        } catch (e: FileNotFoundException) {
+            println("ERROR: $e")
+            showMessage(resources.getString(R.string.file_not_found))
+        }
     }
 
     private fun readFromExternalStorage() {
         try {
-            val file = File(Directories.FILE_EXT.value)
+            val file = File(getExternalFilesDir(EXTERNAL_PATH.value), FILE_EXT.value)
             val text = file.readText()
             text_for_writing.setText(text)
+            showMessage(resources.getString(R.string.file_read_int))
         } catch (e: FileNotFoundException) {
-            showMessage("File not found")
+            showMessage(resources.getString(R.string.file_not_found))
         }
     }
 
     private fun clearExternalStorage() {
-        testDirectory(Directories.EXTERNAL)
-        val file = File(Directories.FILE_EXT.value)
-        if (file.exists()) {
+        testExternalDirectory()
+        try {
+            val file = File(getExternalFilesDir(EXTERNAL_PATH.value), FILE_EXT.value)
             file.delete()
-            showMessage("EXTERNAL storage file deleted")
-        } else {
-            showMessage("File not found")
+            showMessage(resources.getString(R.string.file_deleted_ext))
+        } catch (e: FileNotFoundException) {
+            showMessage(resources.getString(R.string.file_not_found))
         }
     }
 
     private fun writeFileToInternalStorage(string: String) {
-        val fos = openFileOutput("text.txt", Context.MODE_PRIVATE)
+        val fos = openFileOutput(FILE_INT.value, Context.MODE_PRIVATE)
         try {
             fos.write(string.toByteArray())
-            showMessage("File wrote in INTERNAL storage")
+            showMessage(resources.getString(R.string.file_wrote_int))
         } catch (e: IOException) {
-            showMessage("File did not write")
+            showMessage(resources.getString(R.string.file_not_written))
         }
     }
 
     private fun readFromInternalStorage() {
         try {
-            val fis = openFileInput("text.txt")
+            val fis = openFileInput(FILE_INT.value)
             val bytes = ByteArray(fis.available())
             fis.read(bytes)
             val text = String(bytes)
             text_for_writing.setText(text)
-            showMessage("File read from INTERNAL storage")
+            showMessage(resources.getString(R.string.file_read_int))
         } catch (e: FileNotFoundException) {
-            showMessage("File not found")
+            showMessage(resources.getString(R.string.file_not_found))
         }
     }
 
     private fun clearInternalStorage() {
         try {
-            this.deleteFile("text.txt")
-            showMessage("INTERNAL storage file deleted")
+            this.deleteFile(FILE_INT.value)
+            showMessage(resources.getString(R.string.file_deleted_int))
         } catch (e: FileNotFoundException) {
-            showMessage("File not found")
+            showMessage(resources.getString(R.string.file_not_found))
         }
     }
 
-    private fun testDirectory(path: Directories) {
-        val file = File(path.value)
+    private fun testExternalDirectory() {
+        val file = File(FILE_EXT.value)
         if (!file.exists())
             file.mkdirs()
     }

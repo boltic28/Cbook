@@ -1,3 +1,4 @@
+include ':networkretroroom'
 include ':filesaver'
 include ':recyclertask'
 include ':app'
