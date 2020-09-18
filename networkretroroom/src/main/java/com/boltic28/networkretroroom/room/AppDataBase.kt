@@ -4,11 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.boltic28.networkretroroom.room.human.Human
+import com.boltic28.networkretroroom.room.human.HumanEntity
 import com.boltic28.networkretroroom.room.human.HumanDao
 
 @Database(
-    entities = [Human::class],
+    entities = [HumanEntity::class],
     version = 1,
     exportSchema = false
 )
