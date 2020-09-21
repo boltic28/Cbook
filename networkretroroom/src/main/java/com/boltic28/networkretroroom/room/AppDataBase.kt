@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.boltic28.networkretroroom.room.human.HumanEntity
-import com.boltic28.networkretroroom.room.human.HumanDao
+import com.boltic28.networkretroroom.room.man.ManDao
+import com.boltic28.networkretroroom.room.man.ManEntity
+import com.boltic28.networkretroroom.room.woman.WomanDao
+import com.boltic28.networkretroroom.room.woman.WomanEntity
 
 @Database(
-    entities = [HumanEntity::class],
+    entities = [ManEntity::class, WomanEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -24,5 +26,6 @@ abstract class AppDataBase : RoomDatabase() {
         }
     }
 
-    abstract fun humanDao(): HumanDao
+    abstract fun manDao(): ManDao
+    abstract fun womanDao(): WomanDao
 }

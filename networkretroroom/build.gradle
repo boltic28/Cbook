@@ -3,6 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+kapt {
+    correctErrorTypes = true
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -28,6 +32,8 @@ android {
 dependencies {
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    implementation 'co.trikita:log:1.1.5'
 
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"

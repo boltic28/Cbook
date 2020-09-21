@@ -11,7 +11,5 @@ class DataModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideDataBase(): AppDataBase {
-        return AppDataBase.getInstance(context)
-    }
+    fun provideDataBase(): AppDataBase = AppDataBase.getInstance(context)
 }

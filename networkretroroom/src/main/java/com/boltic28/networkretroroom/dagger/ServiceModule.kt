@@ -1,8 +1,9 @@
 package com.boltic28.networkretroroom.dagger
 
+import com.boltic28.networkretroroom.network.NetworkService
 import com.boltic28.networkretroroom.room.AppDataBase
-import com.boltic28.networkretroroom.room.human.HumanDao
-import com.boltic28.networkretroroom.service.HumanServiceImpl
+import com.boltic28.networkretroroom.room.man.ManDao
+import com.boltic28.networkretroroom.room.woman.WomanDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -12,13 +13,13 @@ class ServiceModule(private val dataBase: AppDataBase) {
 
     @Singleton
     @Provides
-    fun provideHumanService(): HumanServiceImpl {
-        return HumanServiceImpl()
-    }
+    fun provideNetworkService(): NetworkService = NetworkService()
 
     @Singleton
     @Provides
-    fun provideHumanDao(): HumanDao {
-        return dataBase.humanDao()
-    }
+    fun provideManDao(): ManDao = dataBase.manDao()
+
+    @Singleton
+    @Provides
+    fun provideWomanDao(): WomanDao = dataBase.womanDao()
 }
