@@ -5,9 +5,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.boltic28.networkretroroom.data.Human
+import com.boltic28.networkretroroom.data.dto.Human
 
 class HumanAdapter(var items: List<Human>) : RecyclerView.Adapter<HumanAdapter.HumanHolder>() {
+
+    fun setData(list: List<Human>) {
+        items = list
+        notifyDataSetChanged()
+    }
+
+    fun addAll(list: List<Human>) {
+        val newData = mutableListOf<Human>()
+        newData.addAll(items)
+        newData.addAll(list)
+        items = newData
+        notifyDataSetChanged()
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         HumanHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_row, parent, false))

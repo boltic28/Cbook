@@ -1,8 +1,8 @@
 package com.boltic28.networkretroroom.dagger
 
 import com.boltic28.networkretroroom.MainActivity
-import com.boltic28.networkretroroom.service.man.ManServiceImpl
-import com.boltic28.networkretroroom.service.woman.WomanServiceImpl
+import com.boltic28.networkretroroom.data.room.man.ManServiceImpl
+import com.boltic28.networkretroroom.data.room.woman.WomanServiceImpl
 import dagger.Component
 import javax.inject.Singleton
 

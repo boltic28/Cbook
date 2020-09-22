@@ -1,9 +1,9 @@
 package com.boltic28.networkretroroom.dagger
 
-import com.boltic28.networkretroroom.network.NetworkService
-import com.boltic28.networkretroroom.room.AppDataBase
-import com.boltic28.networkretroroom.room.man.ManDao
-import com.boltic28.networkretroroom.room.woman.WomanDao
+import com.boltic28.networkretroroom.data.network.NetworkService
+import com.boltic28.networkretroroom.data.room.AppDataBase
+import com.boltic28.networkretroroom.data.room.man.ManDao
+import com.boltic28.networkretroroom.data.room.woman.WomanDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
