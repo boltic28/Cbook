@@ -32,4 +32,9 @@ class MainActivity : AppCompatActivity() {
 
         recycler.adapter = adapter
     }
+
+    override fun onPause() {
+        super.onPause()
+        model.disposable.dispose()
+    }
 }

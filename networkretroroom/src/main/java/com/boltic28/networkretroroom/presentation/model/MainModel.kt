@@ -3,26 +3,20 @@ package com.boltic28.networkretroroom.presentation.model
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.DiffUtil
-import com.boltic28.networkretroroom.util.DiffUtilUsers
-import com.boltic28.networkretroroom.presentation.HumanAdapter
-import com.boltic28.networkretroroom.util.NetworkChecker
 import com.boltic28.networkretroroom.dagger.AppDagger
 import com.boltic28.networkretroroom.data.dto.Human
 import com.boltic28.networkretroroom.data.network.NetworkService
 import com.boltic28.networkretroroom.data.room.enum.Gender
 import com.boltic28.networkretroroom.data.room.man.ManServiceImpl
 import com.boltic28.networkretroroom.data.room.woman.WomanServiceImpl
+import com.boltic28.networkretroroom.presentation.HumanAdapter
 import com.boltic28.networkretroroom.util.Messenger
-import io.reactivex.Scheduler
+import com.boltic28.networkretroroom.util.NetworkChecker
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.BiPredicate
-import io.reactivex.functions.Function
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class MainModel : ViewModel() {
@@ -43,8 +37,8 @@ class MainModel : ViewModel() {
     lateinit var messenger: Messenger
 
     private var isNetConnected: Boolean
-    private var tag = "csfgt"
-    private val countOfTriesToConnectNetwork = 1
+    private var tag = "testing_tag"
+    private val countOfTriesToConnectNetwork = 5
     private val countOfPeopleFromNetwork = 10
 
     lateinit var disposable: Disposable
@@ -73,7 +67,7 @@ class MainModel : ViewModel() {
             manService.getAll(),
             womanService.getAll(),
             BiFunction<List<Human>, List<Human>, List<Human>> { men, women -> men + women })
-            .doOnError{
+            .doOnError {
                 messenger.showMessage("Cannot read data from database")
                 Log.d(tag, "ERROR DB $it")
             }
@@ -89,14 +83,14 @@ class MainModel : ViewModel() {
 
     @SuppressLint("CheckResult")
     fun getDataFromNet(): Disposable {
-        return  network.getUsersFromNetWork(countOfPeopleFromNetwork)
+        return network.getUsersFromNetWork(countOfPeopleFromNetwork)
             .retry(BiPredicate<Int, Throwable> { number, err ->
-                if (number == countOfTriesToConnectNetwork){
+                if (number == countOfTriesToConnectNetwork) {
                     Log.d(tag, "$number-st try to get data from NET...")
                     Log.d(tag, "Cannot to get data from NET")
                     messenger.showMessage("Cannot get data from network")
                     return@BiPredicate false
-                }else{
+                } else {
                     Log.d(tag, "$number-st try to get data from NET")
                     Log.d(tag, "ERROR NET $err")
                     return@BiPredicate true
@@ -110,7 +104,7 @@ class MainModel : ViewModel() {
                 messenger.showMessage("Database is refreshed")
                 Log.d(tag, "Loading data into adapter")
                 adapter.refreshData(list)
-            },{
+            }, {
                 Log.d(tag, "Network or Writing Error: $it")
                 getDataFromDB()
             })
@@ -156,7 +150,6 @@ class MainModel : ViewModel() {
                             })
                     }
                 }
-
                 return@flatMap result
             }
     }
