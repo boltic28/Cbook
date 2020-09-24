@@ -1,10 +1,11 @@
 package com.boltic28.networkretroroom.data.room.woman
 
-import com.boltic28.networkretroroom.data.dto.Woman
 import com.boltic28.networkretroroom.dagger.AppDagger
 import com.boltic28.networkretroroom.data.dto.Human
+import com.boltic28.networkretroroom.data.dto.Woman
 import com.boltic28.networkretroroom.data.room.TypesConverter
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import java.util.stream.Collectors
 import javax.inject.Inject
 
@@ -14,36 +15,36 @@ class WomanServiceImpl @Inject constructor() :
     @Inject
     lateinit var dao: WomanDao
 
-    var converter = TypesConverter()
+    private var converter = TypesConverter()
 
     init {
         AppDagger.component.injectService(this)
     }
 
     override fun create(woman: Woman): Single<Long> =
-        dao.insert(entityFrom(woman))
+        dao.insert(entityFrom(woman)).subscribeOn(Schedulers.io())
 
     override fun update(woman: Woman): Single<Int> =
-        dao.update(entityFrom(woman))
+        dao.update(entityFrom(woman)).subscribeOn(Schedulers.io())
 
     override fun delete(woman: Woman): Single<Int> =
-        dao.delete(entityFrom(woman))
+        dao.delete(entityFrom(woman)).subscribeOn(Schedulers.io())
 
     override fun deleteAll(): Single<Int> =
-        dao.deleteAll()
+        dao.deleteAll().subscribeOn(Schedulers.io())
 
     override fun getById(id: Long): Single<Woman> =
         dao.getById(id)
-            .map { womanFrom(it) }
+            .map { womanFrom(it) }.subscribeOn(Schedulers.io())
 
-    override fun getAll(): Single<List<Woman>> =
+    override fun getAll(): Single<List<Human>> =
         dao.getAll().map { entityList ->
             entityList.stream()
                 .map { entity ->
-                    womanFrom(entity)
+                    humanFrom(entity)
                 }
                 .collect(Collectors.toList())
-        }
+        }.subscribeOn(Schedulers.io())
 
     override fun entityFrom(woman: Woman): WomanEntity =
         WomanEntity(
@@ -61,6 +62,13 @@ class WomanServiceImpl @Inject constructor() :
 
     override fun womanFrom(entity: WomanEntity): Woman =
         Woman(
+            entity.id, converter.genderFromString(entity.gender), entity.title
+            , entity.name, entity.lastName, entity.age
+            , converter.dateFromTimestamp(entity.date), entity.photo, entity.phone, entity.mail
+        )
+
+    override fun humanFrom(entity: WomanEntity): Human =
+        Human(
             entity.id, converter.genderFromString(entity.gender), entity.title
             , entity.name, entity.lastName, entity.age
             , converter.dateFromTimestamp(entity.date), entity.photo, entity.phone, entity.mail

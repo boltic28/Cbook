@@ -5,45 +5,46 @@ import com.boltic28.networkretroroom.data.dto.Human
 import com.boltic28.networkretroroom.data.dto.Man
 import com.boltic28.networkretroroom.data.room.TypesConverter
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import java.util.stream.Collectors
 import javax.inject.Inject
 
-class ManServiceImpl @Inject constructor():
+class ManServiceImpl @Inject constructor() :
     ManService {
 
     @Inject
     lateinit var dao: ManDao
 
-    var converter = TypesConverter()
+    private var converter = TypesConverter()
 
     init {
         AppDagger.component.injectService(this)
     }
 
     override fun create(man: Man): Single<Long> =
-        dao.insert(entityFrom(man))
+        dao.insert(entityFrom(man)).subscribeOn(Schedulers.io())
 
     override fun update(man: Man): Single<Int> =
-        dao.update(entityFrom(man))
+        dao.update(entityFrom(man)).subscribeOn(Schedulers.io())
 
     override fun delete(man: Man): Single<Int> =
-        dao.delete(entityFrom(man))
+        dao.delete(entityFrom(man)).subscribeOn(Schedulers.io())
 
     override fun deleteAll(): Single<Int> =
-        dao.deleteAll()
+        dao.deleteAll().subscribeOn(Schedulers.io())
 
     override fun getById(id: Long): Single<Man> =
         dao.getById(id)
-            .map { humanFrom(it) }
+            .map { manFrom(it) }.subscribeOn(Schedulers.io())
 
-    override fun getAll(): Single<List<Man>> =
+    override fun getAll(): Single<List<Human>> =
         dao.getAll().map { entityList ->
             entityList.stream()
-            .map { entity ->
-                humanFrom(entity)
-            }
-            .collect(Collectors.toList())
-        }
+                .map { entity ->
+                    humanFrom(entity)
+                }
+                .collect(Collectors.toList())
+        }.subscribeOn(Schedulers.io())
 
     override fun entityFrom(man: Man): ManEntity =
         ManEntity(
@@ -59,8 +60,15 @@ class ManServiceImpl @Inject constructor():
             , converter.dateToTimestamp(human.date), human.photo, human.phone, human.mail
         )
 
-    override fun humanFrom(entity: ManEntity): Man =
+    override fun manFrom(entity: ManEntity): Man =
         Man(
+            entity.id, converter.genderFromString(entity.gender), entity.title
+            , entity.name, entity.lastName, entity.age
+            , converter.dateFromTimestamp(entity.date), entity.photo, entity.phone, entity.mail
+        )
+
+    override fun humanFrom(entity: ManEntity): Human =
+        Human(
             entity.id, converter.genderFromString(entity.gender), entity.title
             , entity.name, entity.lastName, entity.age
             , converter.dateFromTimestamp(entity.date), entity.photo, entity.phone, entity.mail

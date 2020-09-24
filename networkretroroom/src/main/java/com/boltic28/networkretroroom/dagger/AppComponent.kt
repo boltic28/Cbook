@@ -1,8 +1,9 @@
 package com.boltic28.networkretroroom.dagger
 
-import com.boltic28.networkretroroom.MainActivity
+import com.boltic28.networkretroroom.presentation.view.MainActivity
 import com.boltic28.networkretroroom.data.room.man.ManServiceImpl
 import com.boltic28.networkretroroom.data.room.woman.WomanServiceImpl
+import com.boltic28.networkretroroom.presentation.model.MainModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,6 +13,7 @@ interface AppComponent {
 
     fun injectService(service: ManServiceImpl)
     fun injectService(service: WomanServiceImpl)
+    fun injectModel(model: MainModel)
 
     fun injectActivity(activity: MainActivity)
 

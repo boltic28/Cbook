@@ -11,10 +11,11 @@ interface WomanService {
     fun delete(woman: Woman): Single<Int>
     fun deleteAll(): Single<Int>
     fun getById(id: Long): Single<Woman>
-    fun getAll(): Single<List<Woman>>
+    fun getAll(): Single<List<Human>>
     fun entityFrom(woman: Woman): WomanEntity
     fun entityFrom(human: Human): WomanEntity
     fun womanFrom(entity: WomanEntity): Woman
+    fun humanFrom(entity: WomanEntity): Human
     fun humanFrom(woman: Woman): Human
     fun womanFrom(human: Human): Woman
 }

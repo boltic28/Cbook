@@ -1,17 +1,31 @@
-package com.boltic28.networkretroroom
+package com.boltic28.networkretroroom.presentation
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.boltic28.networkretroroom.R
 import com.boltic28.networkretroroom.data.dto.Human
+import com.boltic28.networkretroroom.util.DiffUtilUsers
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class HumanAdapter(var items: List<Human>) : RecyclerView.Adapter<HumanAdapter.HumanHolder>() {
 
-    fun setData(list: List<Human>) {
+    private fun setData(list: List<Human>) {
         items = list
         notifyDataSetChanged()
+    }
+
+    fun refreshData(list: List<Human>) {
+        val itemDiff = DiffUtilUsers(items, list)
+        val result = DiffUtil.calculateDiff(itemDiff)
+
+        setData(list)
+        result.dispatchUpdatesTo(this)
     }
 
     fun addAll(list: List<Human>) {
@@ -38,13 +52,27 @@ class HumanAdapter(var items: List<Human>) : RecyclerView.Adapter<HumanAdapter.H
         var name: TextView = itemView.findViewById(R.id.item_name)
         var lastName: TextView = itemView.findViewById(R.id.item_last_name)
         var email: TextView = itemView.findViewById(R.id.item_mail)
+        var age: TextView = itemView.findViewById(R.id.item_age)
+        var phone: TextView = itemView.findViewById(R.id.item_phone)
+        var gender: TextView = itemView.findViewById(R.id.item_gender)
+        var image: ImageView = itemView.findViewById(R.id.item_image)
 
 
         fun bind(item: Human) {
             id.text = item.id.toString()
             name.text = item.name
-            lastName.setText(item.lastName)
-            email.setText(item.mail)
+            lastName.text = item.lastName
+            email.text = item.mail
+            age.text = item.age.toString()
+            phone.text = item.phone
+            gender.text = item.gender.value
+
+            Glide
+                .with(itemView)
+                .load(item.photo)
+                .fitCenter()
+                .transform(RoundedCorners(120))
+                .into(image)
         }
 
     }
