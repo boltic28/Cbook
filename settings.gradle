@@ -1,3 +1,5 @@
+include ':renderscript'
+include ':pushnotification'
 include ':notification'
 include ':networkretroroom'
 include ':filesaver'

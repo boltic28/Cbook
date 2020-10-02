@@ -15,7 +15,9 @@
             <option value="$PROJECT_DIR$/filesaver" />
             <option value="$PROJECT_DIR$/networkretroroom" />
             <option value="$PROJECT_DIR$/notification" />
+            <option value="$PROJECT_DIR$/pushnotification" />
             <option value="$PROJECT_DIR$/recyclertask" />
+            <option value="$PROJECT_DIR$/renderscript" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Renderscript</string>
+    <string name="blurring_level">blurring level</string>
+</resources>
