@@ -7,16 +7,24 @@ import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import kotlin.math.roundToInt
 
-class BlurUtil() {
-    val TAG = "wtf"
+class BlurUtil(private val context: Context,private val image: Bitmap) {
 
-    fun blur(context: Context, image: Bitmap, data: Float): Bitmap {
-        Log.d(TAG, "radius -> $data")
+    private val tag = "wtf"
+    private var scale = 1f
 
-        val scale = data/100
-        val radius = data/4
+    private val blurS: BehaviorSubject<Bitmap> = BehaviorSubject.createDefault<Bitmap>(image)
+        val blur: Observable<Bitmap>
+            get() = blurS.hide()
+
+    fun blur(position: Float) {
+        Log.d(tag, "position -> $position")
+
+        scale = 1 - position/100
+        val radius = 10.5f
 
         val width = (image.width * scale).roundToInt()
         val height = (image.height * scale).roundToInt()
@@ -39,6 +47,7 @@ class BlurUtil() {
         tmpIn.destroy()
         tmpOut.destroy()
 
-        return outBitmap
+        Log.d(tag, "scale -> $scale")
+        blurS.onNext(outBitmap)
     }
 }

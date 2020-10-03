@@ -2,42 +2,67 @@ package com.boltic28.renderscript
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    val TAG = "wtf"
+    private val tag = "wtf"
+    private var disposable: Disposable = Disposables.disposed()
+    private lateinit var blurMaker: BlurUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        blur_view.setImageResource(R.drawable.blur)
+        blurMaker = BlurUtil(this, resources.getDrawable(R.drawable.blur).toBitmap())
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {}
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if (p1 == 0) {
+                    blur_view.setImageResource(R.drawable.blur)
+                    Log.d(tag, "default picture")
+                } else {
+                    blurMaker.blur(p1.toFloat())
+                }
+            }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {}
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                blur_view.setImageResource(R.drawable.blur)
-                if (seekBar.progress == 0) {
-                    Log.d(TAG, "default picture")
-                } else {
-                    Log.d(TAG, "blurring rad: ${seekBar.progress}")
-                    blur_view.setImageBitmap(
-                        BlurUtil().blur(
-                            this@MainActivity,
-                            resources.getDrawable(R.drawable.blur).toBitmap(),
-                            seekBar.progress.toFloat()
-                        )
-                    )
-                }
+//                p0?.let {bar ->
+//                    if (bar.progress == 0) {
+//                        blur_view.setImageResource(R.drawable.blur)
+//                        Log.d(tag, "default picture")
+//                    } else {
+//                        blurMaker.blur(bar.progress.toFloat())
+//                    }
+//                }
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(tag, "init disposable")
+        disposable = blurMaker.blur
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ bitmap ->
+                Log.d(tag, "Blur is installed")
+                blur_view.setImageBitmap(bitmap)
+            }, {
+                Log.d(tag, "Blur problem:\n $it")
+            })
+    }
+
+    override fun onStop() {
+        Log.d(tag, "close disposable")
+        disposable.dispose()
+        super.onStop()
     }
 }
