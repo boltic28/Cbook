@@ -8,8 +8,8 @@
 
     <FrameLayout
         android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_margin="24dp"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,7 +20,6 @@
             android:id="@+id/blur_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/blur"
             android:scaleType="centerCrop"
             />
     </FrameLayout>
@@ -53,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:max="80"
+        android:max="92"
         android:min="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

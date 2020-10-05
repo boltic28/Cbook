@@ -44,15 +44,17 @@ class NotificationService : Service() {
     }
 
     private fun sleep() {
+        Log.d(TAG, "timer will wait for ${SLEEP_FOR/60000} minutes")
+
         NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID)
-        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pend = PendingIntent.getService(
             this,
             22,
             Intent(this, NotificationService::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_ONE_SHOT
         )
-        Log.d(TAG, "timer will wait for ${SLEEP_FOR/60000} minutes")
+
+        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         manager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + SLEEP_FOR, pend)
     }
 

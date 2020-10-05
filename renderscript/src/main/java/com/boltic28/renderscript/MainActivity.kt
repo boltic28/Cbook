@@ -21,12 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        blurMaker = BlurUtil(this, resources.getDrawable(R.drawable.blur).toBitmap())
+        blurMaker = BlurUtil(this, resources.getDrawable(R.drawable.scene3).toBitmap())
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 if (p1 == 0) {
-                    blur_view.setImageResource(R.drawable.blur)
+//                    blur_view.setImageResource(R.drawable.big_scene)
                     Log.d(tag, "default picture")
                 } else {
                     blurMaker.blur(p1.toFloat())
