@@ -1,3 +1,5 @@
+include ':stepcounter'
+include ':camera'
 include ':renderscript'
 include ':pushnotification'
 include ':notification'

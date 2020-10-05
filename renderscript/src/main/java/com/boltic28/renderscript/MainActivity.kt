@@ -8,6 +8,7 @@ import androidx.core.graphics.drawable.toBitmap
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         Log.d(tag, "init disposable")
         disposable = blurMaker.blur
+            .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ bitmap ->
                 Log.d(tag, "Blur is installed")

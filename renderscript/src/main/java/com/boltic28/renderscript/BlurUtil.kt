@@ -15,6 +15,7 @@ class BlurUtil(private val context: Context,private val image: Bitmap) {
 
     private val tag = "wtf"
     private var scale = 1f
+    private val radius = 10.5f
 
     private val blurS: BehaviorSubject<Bitmap> = BehaviorSubject.createDefault<Bitmap>(image)
         val blur: Observable<Bitmap>
@@ -24,7 +25,6 @@ class BlurUtil(private val context: Context,private val image: Bitmap) {
         Log.d(tag, "position -> $position")
 
         scale = 1 - position/100
-        val radius = 10.5f
 
         val width = (image.width * scale).roundToInt()
         val height = (image.height * scale).roundToInt()

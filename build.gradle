@@ -6,6 +6,7 @@ buildscript {
     ext.rxjava_version = '2.2.19'
     ext.rxandroid_version = '2.1.1'
     ext.room_version = '2.2.5'
+    ext.camerax_version = '1.0.0-beta10'
 
     repositories {
         google()
