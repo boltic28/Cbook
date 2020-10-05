@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">StepCounter</string>
+    <string name="_23_steps">23 steps</string>
+    <string name="steps">%d steps</string>
+</resources>
