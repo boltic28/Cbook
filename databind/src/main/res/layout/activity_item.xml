@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="person"
+            type="com.boltic28.databind.dto.interf.BaseItem" />
+
+        <variable
+            name="pet"
+            type="com.boltic28.databind.dto.interf.Pet" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        tools:context=".ItemActivity"
+        android:background="@color/teal_200"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:padding="12dp"
+            app:img="@{person.photoUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            tools:text="@string/app_name"
+            android:text='@{person.name}'
+            app:layout_constraintStart_toEndOf="@id/item_image"
+            app:layout_constraintTop_toTopOf="@id/item_image" />
+
+        <TextView
+            android:id="@+id/item_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            tools:text="(id: 22)"
+            android:text='@{"(user id:" + person.id + ")"}'
+            app:layout_constraintStart_toEndOf="@id/item_name"
+            app:layout_constraintTop_toTopOf="@id/item_image" />
+
+        <TextView
+            android:id="@+id/item_pet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"users pet:" + pet.name}'
+            tools:text="tochik"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/item_name"
+            app:layout_constraintTop_toBottomOf="@id/item_name" />
+
+        <TextView
+            android:id="@+id/item_pet_illness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/person_ill"
+            android:textSize="18sp"
+            tools:text="(ill)"
+            android:visibility="@{pet.ill ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintStart_toEndOf="@id/item_pet"
+            app:layout_constraintTop_toBottomOf="@id/item_name" />
+
+        <TextView
+            android:id="@+id/item_profession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@{person.name}"
+            app:layout_constraintStart_toEndOf="@id/item_image"
+            app:layout_constraintTop_toBottomOf="@id/item_pet" />
+
+        <TextView
+            android:id="@+id/item_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(person.age)}"
+            android:textStyle="bold|italic"
+            tools:text="34"
+            app:layout_constraintBottom_toBottomOf="@id/item_image"
+            app:layout_constraintEnd_toEndOf="@id/item_image" />
+
+        <TextView
+            android:id="@+id/item_is_ill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/person_ill"
+            android:visibility="@{person.ill ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_is_covid" />
+
+        <CheckBox
+            android:id="@+id/item_is_covid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/covid"
+            android:checked="@={person.cov}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

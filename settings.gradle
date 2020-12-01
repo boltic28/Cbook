@@ -1,3 +1,5 @@
+include ':databind'
+include ':kointest'
 include ':stepcounter'
 include ':camera'
 include ':renderscript'

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DataBind</string>
+    <string name="person_ill">(is ill at now)</string>
+    <string name="other">other</string>
+    <string name="covid">COVID</string>
+    <string name="do_work">do Work</string>
+</resources>
