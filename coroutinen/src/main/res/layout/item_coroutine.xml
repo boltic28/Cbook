@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="work"
+            type="com.boltic28.coroutinen.Work" />
+    </data>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/item_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="id:1 -> "
+            android:text="@{String.valueOf(work.id)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="coroutine 1"
+            android:text="@{work.name}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_id"
+            />
+
+        <TextView
+            android:id="@+id/item_load_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:text="Loading: "
+            app:layout_constraintTop_toBottomOf="@id/item_id"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/item_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="||||||||"
+            android:text="@{work.loading}"
+            app:layout_constraintTop_toTopOf="@id/item_load_text"
+            app:layout_constraintStart_toEndOf="@id/item_load_text"
+            />
+
+        <Button
+            android:id="@+id/item_button_stop"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:padding="2dp"
+            android:text="@string/stop"
+            android:onClick="@{() -> work.stop()}"
+            app:layout_constraintTop_toTopOf="@id/item_id"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/item_button_start"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:padding="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/start"
+            android:onClick="@{() -> work.start()}"
+            app:layout_constraintTop_toTopOf="@id/item_id"
+            app:layout_constraintEnd_toStartOf="@id/item_button_stop"
+            />
+
+        <TextView
+            android:id="@+id/item_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{work.status}"
+            app:layout_constraintTop_toBottomOf="@id/item_load_text"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
