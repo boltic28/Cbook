@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MediaCreator</string>
+    <string name="label_select_video">Select video</string>
+</resources>

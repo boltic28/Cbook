@@ -1,3 +1,4 @@
+include ':mediacreator'
 include ':coroutinen'
 include ':databind'
 include ':kointest'
