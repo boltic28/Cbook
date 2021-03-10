@@ -16,6 +16,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
+    <TextureView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <TextView
         android:id="@+id/main_text"
         android:layout_width="wrap_content"
