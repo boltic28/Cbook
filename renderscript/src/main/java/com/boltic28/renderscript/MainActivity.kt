@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        blurMaker = BlurUtil(this, resources.getDrawable(R.drawable.scene3).toBitmap())
+        blurMaker = BlurUtil(this, ContextCompat.getDrawable(this, R.drawable.scene3)!!.toBitmap())
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {

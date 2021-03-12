@@ -1,9 +1,12 @@
 package com.boltic28.filesaver
 
 import android.Manifest
+import android.content.ContentUris
 import android.content.Context
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -159,3 +162,20 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }
+
+//how to get path with uri and mediaId
+//val uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, video.mediaId)
+//var path = ""
+//
+//var cursor: Cursor? = null
+//val column = "_data"
+//val project = arrayOf("_data")
+//try {
+//    cursor = requireContext().contentResolver.query(uri, project, null, null,
+//        null)
+//    if (cursor != null && cursor.moveToFirst()) {
+//        path = cursor.getString(cursor.getColumnIndexOrThrow(column))
+//    }
+//} finally {
+//    cursor?.close()
+//}

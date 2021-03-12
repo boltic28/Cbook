@@ -1,3 +1,4 @@
+include ':videorecorder'
 include ':mediacreator'
 include ':coroutinen'
 include ':databind'

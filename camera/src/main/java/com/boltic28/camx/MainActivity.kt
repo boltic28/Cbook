@@ -1,6 +1,7 @@
 package com.boltic28.camx
 
 import android.Manifest
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
@@ -68,6 +69,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         take_photo.setOnClickListener { takePhoto() }
+        record_video.setOnClickListener {
+            startActivity(Intent(this, ActCam.javaClass))
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }

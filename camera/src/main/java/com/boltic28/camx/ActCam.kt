@@ -24,7 +24,8 @@ class ActCam : AppCompatActivity() {
     private lateinit var myCameras: Array<CameraService?>
     private lateinit var cameraManager: CameraManager
     private lateinit var mMediaRecorder: MediaRecorder
-    private val CAMERA1 = 0
+    private val BACK_CAMERA = 0
+    private val FRONT_CAMERA = 1
     private var count = 1
     private var mBackgroundThread: HandlerThread? = null
     private var mBackgroundHandler: Handler? = null
@@ -56,11 +57,6 @@ class ActCam : AppCompatActivity() {
         // work
 
 
-        myCameras[CAMERA1]?.openCamera()
-        mMediaRecorder.start()
-        myCameras[CAMERA1]?.stopRecordingVideo()
-
-
         try {
             myCameras = arrayOfNulls(cameraManager.cameraIdList.size)
             for (cameraID in cameraManager.cameraIdList) {
@@ -72,12 +68,16 @@ class ActCam : AppCompatActivity() {
             e.printStackTrace()
         }
         setUpMediaRecorder()
+
+        but_open.setOnClickListener { myCameras[FRONT_CAMERA]?.openCamera() }
+        but_start.setOnClickListener { mMediaRecorder.start() }
+        but_stop.setOnClickListener { myCameras[FRONT_CAMERA]?.stopRecordingVideo() }
     }
 
     private fun setUpMediaRecorder() {
         mMediaRecorder = MediaRecorder()
         with(mMediaRecorder) {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
+//            setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             mCurrentFile = File(
@@ -92,7 +92,7 @@ class ActCam : AppCompatActivity() {
             setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight)
             setVideoEncodingBitRate(profile.videoBitRate)
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+//            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setAudioEncodingBitRate(profile.audioBitRate)
             setAudioSamplingRate(profile.audioSampleRate)
             try {
@@ -181,9 +181,6 @@ class ActCam : AppCompatActivity() {
             setUpMediaRecorder()
             startCameraPreviewSession()
         }
-
-        val isOpen: Boolean
-            get() = mCameraDevice != null
 
         fun openCamera() {
             try {
